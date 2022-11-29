@@ -1,0 +1,56 @@
+plugins {
+	// 스프링부트 플러그인
+	id 'java'
+	id 'org.springframework.boot' version '2.7.5'
+	id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'com.sesac'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+//인코딩 방식
+compileJava.options.encoding = 'UTF-8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// 스프링부트
+	implementation 'org.springframework.boot:spring-boot-starter'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// 어노테이션
+	implementation 'org.jetbrains:annotations:23.0.0'
+
+	// Lombok
+	implementation 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+	// DB
+	runtimeOnly 'mysql:mysql-connector-java:'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// Web
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// Security, Authentication
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// jwt
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
