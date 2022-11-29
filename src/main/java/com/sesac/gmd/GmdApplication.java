@@ -9,6 +9,6 @@ public class GmdApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GmdApplication.class, args);
 	}
-	// test commit
+	// test commit 2
 
 }
