@@ -2,6 +2,7 @@
 HELP.md
 application.properties
 secret/
+application.yml
 
 ### Gradle ###
 .gradle
