@@ -7,7 +7,6 @@ plugins {
 
 group = 'com.sesac'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
 
 //인코딩 방식
 compileJava.options.encoding = 'UTF-8'
@@ -48,6 +47,10 @@ dependencies {
 
 	// jwt
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+	// Swagger
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 
 }
 
