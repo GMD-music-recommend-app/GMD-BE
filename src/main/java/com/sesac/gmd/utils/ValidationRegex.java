@@ -11,13 +11,5 @@ public class ValidationRegex {
         Matcher matcher = pattern.matcher(target);
         return matcher.find();
     }
-
-    // 휴대폰 형식 체크
-    public static boolean isRegexPhone(String phoneNum) {
-        String regex = "^\\d{3}-\\d{3,4}-\\d{4}$";
-        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(phoneNum);
-        return matcher.find();
-    }
 }
 
