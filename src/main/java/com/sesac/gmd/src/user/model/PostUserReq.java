@@ -12,7 +12,9 @@ public class PostUserReq {
     private String gender;
     private String age;
     private String email;
-    private String location;
+    private String state;
+    private String city;
+    private String street;
     private String pushId;
     private String oauthId;
 }

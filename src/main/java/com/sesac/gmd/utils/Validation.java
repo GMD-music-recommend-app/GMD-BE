@@ -8,16 +8,19 @@ import java.util.Objects;
 import static com.sesac.gmd.config.BaseResponseStatus.*;
 
 public class Validation {
+    /* 회원 가입 시 비어있는 값이 있는지 확인 */
     public static BaseResponseStatus userValidation(PostUserReq postUserReq) {
-        // 비어있는 값이 있는지 확인
         if(postUserReq.getNickname().isBlank()) {
             return POST_USERS_EMPTY_NICKNAME;
         }
+        if(postUserReq.getGender().isBlank()) {
+            return POST_USERS_EMPTY_GENDER;
+        }
+        if(postUserReq.getAge().isBlank()) {
+            return POST_USERS_EMPTY_GENDER;
+        }
         if(postUserReq.getEmail().isBlank()) {
             return POST_USERS_EMPTY_EMAIL;
-        }
-        if(postUserReq.getLocation().isBlank()) {
-            return POST_USERS_EMPTY_LOCATION;
         }
         if(postUserReq.getPushId().isBlank()) {
             return POST_USERS_EMPTY_PUSH;
@@ -32,6 +35,7 @@ public class Validation {
         }
 
         // 나이 범위가 맞는지 확인... 이건 어케 하지?
+        // 추후에 회의 후 진행
 
         return SUCCESS;
     }
