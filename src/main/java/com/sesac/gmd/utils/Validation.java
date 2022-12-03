@@ -70,11 +70,16 @@ public class Validation {
             return POST_PINS_EMPTY_STREET;
         }
 
-        // 위도, 경도 범위 검사
-        if(!(postPinReq.getLatitude() < 180 && postPinReq.getLatitude() > -180)) {
+        // 위도 경도 범위 검사 후 리턴
+        return locationValidation(postPinReq.getLatitude(), postPinReq.getLongitude());
+    }
+
+    /* 위도, 경도 범위 검사 */
+    public static BaseResponseStatus locationValidation(double latitude, double longitude) {
+        if(!(latitude < 180 && latitude > -180)) {  // 위도
             return POST_PINS_INVALID_LATITUDE;
         }
-        if(!(postPinReq.getLongitude() < 90 && postPinReq.getLongitude() > -90)) {
+        if(!(longitude < 90 && longitude > -90)) {  // 경도
             return POST_PINS_INVALID_LONGITUDE;
         }
 

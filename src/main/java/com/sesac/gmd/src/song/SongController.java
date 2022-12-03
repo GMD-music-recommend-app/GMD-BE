@@ -3,16 +3,13 @@ package com.sesac.gmd.src.song;
 import com.sesac.gmd.config.BaseException;
 import com.sesac.gmd.config.BaseResponse;
 import com.sesac.gmd.config.BaseResponseStatus;
+import com.sesac.gmd.src.song.model.GetPinReq;
+import com.sesac.gmd.src.song.model.Pin;
 import com.sesac.gmd.src.song.model.PostPinReq;
 import com.sesac.gmd.src.song.model.PostPinRes;
-import com.sesac.gmd.src.user.UserProvider;
-import com.sesac.gmd.src.user.UserService;
 import com.sesac.gmd.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.sesac.gmd.config.BaseResponseStatus.INVALID_USER_JWT;
 import static com.sesac.gmd.config.BaseResponseStatus.SUCCESS;
@@ -34,7 +31,7 @@ public class SongController {
         this.jwtService = jwtService;
     }
 
-    /* 핀 추가하기 API */
+    /* 핀 생성 API */
     @PostMapping("")
     public BaseResponse<PostPinRes> createPin(@RequestBody PostPinReq postPinReq) {
         try {
@@ -47,21 +44,43 @@ public class SongController {
             }
 
             // 빈 값 확인
-            BaseResponseStatus validation = pinValidation(postPinReq);
+            BaseResponseStatus status = pinValidation(postPinReq);
 
-            if(validation == SUCCESS) {
+            if(status == SUCCESS) {
                 PostPinRes postPinRes = songService.createPin(postPinReq);
                 return new BaseResponse<>(postPinRes);
             } else {
                 // 입력되지 않은 게 있으면
-                return new BaseResponse<>(validation);
+                return new BaseResponse<>(status);
             }
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
+    }
 
+    /* 핀 반환 API */
+    @GetMapping("/info")
+    public BaseResponse<Pin> getPin(@RequestBody GetPinReq getPinReq) {
+        try {
+            if(getPinReq.getUserIdx() == 0) {
+                Pin getPinRes = songProvider.getPin(getPinReq);
+                return new BaseResponse<>(getPinRes);
+            } else {
+                // 유효한 JWT인지 확인
+                int userIdxByJwt = jwtService.getUserIdx();  // JWT에서 userIdx 추출
 
+                if(getPinReq.getUserIdx() != userIdxByJwt){
+                    // userIdx와 접근한 유저가 같은지 확인
+                    return new BaseResponse<>(INVALID_USER_JWT);
+                }
 
+                Pin getPinRes = songProvider.getPin(getPinReq);
+                return new BaseResponse<>(getPinRes);
+            }
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
     }
 }
 
