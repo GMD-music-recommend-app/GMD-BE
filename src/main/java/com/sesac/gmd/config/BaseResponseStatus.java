@@ -37,6 +37,18 @@ public enum BaseResponseStatus {
     POST_USERS_INVALID_EMAIL(false, 2022, "이메일 형식을 확인해주세요."),
     POST_USERS_EXISTS_EMAIL(false,2030,"중복된 이메일입니다."),
 
+    // pins
+    POST_PINS_EMPTY_TITLE(false, 2040, "제목을 입력해주세요."),
+    POST_PINS_EMPTY_SINGER(false, 2041, "가수를 입력해주세요."),
+    POST_PINS_EMPTY_ALBUM(false, 2042, "앨범 제목을 입력해주세요."),
+    POST_PINS_EMPTY_ALBUM_COVER(false, 2043, "앨범 커버를 입력해주세요."),
+    POST_PINS_EMPTY_REASON(false, 2044, "추천 이유를 입력해주세요."),
+    POST_PINS_EMPTY_HASHTAG(false, 2045, "해시태그를 입력해주세요."),
+    POST_PINS_EMPTY_STATE(false, 2046, "시를 입력해주세요."),
+    POST_PINS_EMPTY_CITY(false, 2047, "군을 입력해주세요."),
+    POST_PINS_EMPTY_STREET(false, 2048, "구를 입력해주세요."),
+    POST_PINS_INVALID_LATITUDE(false, 2050, "위도 범위를 확인해주세요."),
+    POST_PINS_INVALID_LONGITUDE(false, 2051, "경도 범위를 확인해주세요."),
 
     /**
      * 3000 : Response 오류
