@@ -1,15 +1,13 @@
-package com.sesac.gmd.src.user.model;
+package com.sesac.gmd.src.song.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Data
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostUserRes {
+public class PostLikeRes {
     private int userIdx;
-    private String jwt;
+    private int songIdx;
 }
