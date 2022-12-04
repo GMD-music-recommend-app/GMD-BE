@@ -76,10 +76,10 @@ public class Validation {
 
     /* 위도, 경도 범위 검사 */
     public static BaseResponseStatus locationValidation(double latitude, double longitude) {
-        if(!(latitude < 180 && latitude > -180)) {  // 위도
+        if(!(latitude < 90 && latitude > -90)) {  // 위도
             return POST_PINS_INVALID_LATITUDE;
         }
-        if(!(longitude < 90 && longitude > -90)) {  // 경도
+        if(!(longitude < 180 && longitude > -180)) {  // 경도
             return POST_PINS_INVALID_LONGITUDE;
         }
 

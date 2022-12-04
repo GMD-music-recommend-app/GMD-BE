@@ -35,5 +35,14 @@ public class SongProvider {
         }
     }
 
+    /* 핀 리스트 반환 API */
+    public List<GetPinsRes> getPins(GetPinsReq getPinsReq) throws BaseException {
+        try {
+            return songDao.getPins(getPinsReq);
+        } catch(Exception exception) {
+            throw  new BaseException(DATABASE_ERROR);
+        }
+    }
+
     /** 유효성 검사 **/
 }

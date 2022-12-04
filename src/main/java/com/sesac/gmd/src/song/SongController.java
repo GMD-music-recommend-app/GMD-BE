@@ -3,16 +3,16 @@ package com.sesac.gmd.src.song;
 import com.sesac.gmd.config.BaseException;
 import com.sesac.gmd.config.BaseResponse;
 import com.sesac.gmd.config.BaseResponseStatus;
-import com.sesac.gmd.src.song.model.GetPinReq;
-import com.sesac.gmd.src.song.model.Pin;
-import com.sesac.gmd.src.song.model.PostPinReq;
-import com.sesac.gmd.src.song.model.PostPinRes;
+import com.sesac.gmd.src.song.model.*;
 import com.sesac.gmd.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.sesac.gmd.config.BaseResponseStatus.INVALID_USER_JWT;
 import static com.sesac.gmd.config.BaseResponseStatus.SUCCESS;
+import static com.sesac.gmd.utils.Validation.locationValidation;
 import static com.sesac.gmd.utils.Validation.pinValidation;
 
 @RestController
@@ -76,6 +76,24 @@ public class SongController {
 
                 Pin getPinRes = songProvider.getPin(getPinReq);
                 return new BaseResponse<>(getPinRes);
+            }
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /* 핀 리스트 반환 API */
+    @GetMapping("/info-list")
+    public BaseResponse<List<GetPinsRes>> getPins(@RequestBody GetPinsReq getPinsReq) {
+        try {
+            BaseResponseStatus status = locationValidation(getPinsReq.getLatitude(), getPinsReq.getLongitude());
+
+            if(status == SUCCESS) {
+                List<GetPinsRes> getPinsRes = songProvider.getPins(getPinsReq);
+                return new BaseResponse<>(getPinsRes);
+            } else {
+                return new BaseResponse<>(status);
             }
 
         } catch (BaseException exception) {
