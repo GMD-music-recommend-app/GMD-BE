@@ -31,6 +31,10 @@ public class UserService {
         if (userProvider.checkEmail(postUserReq.getEmail()) == 1) {
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
         }
+        // 닉네임 중복 체크
+        if (userProvider.checkNickname(postUserReq.getNickname()) == 1) {
+            throw new BaseException(POST_USERS_EXISTS_NICKNAME);
+        }
 
         try {
             int userIdx = userDao.createUser(postUserReq);
@@ -45,7 +49,7 @@ public class UserService {
 
     /* 닉네임 변경 API */
     public String patchNickname(PatchNicknameReq patchNicknameReq) throws BaseException {
-        // 이메일 중복 체크
+        // 닉네임 중복 체크
         if (userProvider.checkNickname(patchNicknameReq.getNickname()) == 1) {
             throw new BaseException(POST_USERS_EXISTS_NICKNAME);
         }
