@@ -10,6 +10,7 @@ import java.util.List;
 public class Pin {
     private int pinIdx;
     private int userIdx;
+    private String nickname;
     private String title;
     private String singer;
     private String album;
