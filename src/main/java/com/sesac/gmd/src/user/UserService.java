@@ -1,14 +1,14 @@
 package com.sesac.gmd.src.user;
 
 import com.sesac.gmd.config.BaseException;
+import com.sesac.gmd.src.user.model.PatchNicknameReq;
 import com.sesac.gmd.src.user.model.PostUserReq;
 import com.sesac.gmd.src.user.model.PostUserRes;
 import com.sesac.gmd.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.sesac.gmd.config.BaseResponseStatus.DATABASE_ERROR;
-import static com.sesac.gmd.config.BaseResponseStatus.POST_USERS_EXISTS_EMAIL;
+import static com.sesac.gmd.config.BaseResponseStatus.*;
 
 @Service
 public class UserService {
@@ -37,6 +37,21 @@ public class UserService {
             String jwt = jwtService.createJwt(userIdx);
 
             return new PostUserRes(userIdx, jwt);
+
+        } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    /* 닉네임 변경 API */
+    public String patchNickname(PatchNicknameReq patchNicknameReq) throws BaseException {
+        // 이메일 중복 체크
+        if (userProvider.checkNickname(patchNicknameReq.getNickname()) == 1) {
+            throw new BaseException(POST_USERS_EXISTS_NICKNAME);
+        }
+
+        try {
+            return userDao.patchNickname(patchNicknameReq);
 
         } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
             throw new BaseException(DATABASE_ERROR);

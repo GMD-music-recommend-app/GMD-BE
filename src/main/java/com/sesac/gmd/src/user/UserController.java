@@ -3,17 +3,14 @@ package com.sesac.gmd.src.user;
 import com.sesac.gmd.config.BaseException;
 import com.sesac.gmd.config.BaseResponse;
 import com.sesac.gmd.config.BaseResponseStatus;
+import com.sesac.gmd.src.user.model.PatchNicknameReq;
 import com.sesac.gmd.src.user.model.PostUserReq;
 import com.sesac.gmd.src.user.model.PostUserRes;
 import com.sesac.gmd.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import static com.sesac.gmd.config.BaseResponseStatus.POST_USERS_INVALID_EMAIL;
-import static com.sesac.gmd.config.BaseResponseStatus.SUCCESS;
+import static com.sesac.gmd.config.BaseResponseStatus.*;
 import static com.sesac.gmd.utils.Validation.userValidation;
 import static com.sesac.gmd.utils.ValidationRegex.isRegexEmail;
 
@@ -38,9 +35,9 @@ public class UserController {
     @PostMapping("/sign-up")
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
         // NULL 값 체크
-        BaseResponseStatus validation = userValidation(postUserReq);
+        BaseResponseStatus status = userValidation(postUserReq);
 
-        if(validation == SUCCESS) {
+        if(status == SUCCESS) {
             // 형식 체크 : 이메일 형식 체크
             if(!isRegexEmail(postUserReq.getEmail())) {
                 return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
@@ -55,7 +52,31 @@ public class UserController {
 
         } else {
             // 입력되지 않은 게 있으면
-            return new BaseResponse<>(validation);
+            return new BaseResponse<>(status);
+        }
+    }
+
+    /* 닉네임 변경 API */
+    @PatchMapping("/nickname")
+    public BaseResponse<String> patchNickname(@RequestBody PatchNicknameReq patchNicknameReq) {
+        try {
+            // 닉네임이 비어있는지 확인
+            if(patchNicknameReq.getNickname().isBlank()) {
+                return new BaseResponse<>(POST_USERS_EMPTY_NICKNAME);
+            } else {
+                // 유효한 JWT인지 확인
+                int userIdxByJwt = jwtService.getUserIdx();  // JWT에서 userIdx 추출
+
+                if(patchNicknameReq.getUserIdx() != userIdxByJwt){
+                    // userIdx와 접근한 유저가 같은지 확인
+                    return new BaseResponse<>(INVALID_USER_JWT);
+                }
+
+                String result = userService.patchNickname(patchNicknameReq);
+                return new BaseResponse<>(result);
+            }
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
         }
     }
 }

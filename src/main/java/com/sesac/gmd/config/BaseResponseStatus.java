@@ -36,6 +36,7 @@ public enum BaseResponseStatus {
     POST_USERS_INVAlID_AGE(false, 2021, "나이를 확인해주세요."),
     POST_USERS_INVALID_EMAIL(false, 2022, "이메일 형식을 확인해주세요."),
     POST_USERS_EXISTS_EMAIL(false,2030,"중복된 이메일입니다."),
+    POST_USERS_EXISTS_NICKNAME(false,2031,"중복된 닉네임입니다."),
 
     // pins
     POST_PINS_EMPTY_TITLE(false, 2040, "제목을 입력해주세요."),

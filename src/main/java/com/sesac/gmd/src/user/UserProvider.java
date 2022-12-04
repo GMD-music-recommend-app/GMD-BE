@@ -23,10 +23,19 @@ public class UserProvider {
 
     /** 유효성 검사 **/
 
-    // 해당 전화번호가 이미 있는지 검사
+    /* 이메일 중복 검사 */
     public int checkEmail(String email) throws BaseException {
         try {
             return userDao.checkEmail(email);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    /* 닉네임 중복 검사 */
+    public int checkNickname(String nickname) throws BaseException {
+        try {
+            return userDao.checkNickname(nickname);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
