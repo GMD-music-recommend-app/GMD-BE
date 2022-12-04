@@ -1,5 +1,6 @@
 package com.sesac.gmd.src.user;
 
+import com.sesac.gmd.src.user.model.PatchLocationReq;
 import com.sesac.gmd.src.user.model.PatchNicknameReq;
 import com.sesac.gmd.src.user.model.PostUserReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,18 @@ public class UserDao {
         this.jdbcTemplate.update(query, params);
 
         return "닉네임이 성공적으로 변경되었습니다.";
+    }
+
+    /* 관심 지역 변경 API */
+    public String patchLocation(PatchLocationReq patchLocationReq) {
+        String query = "update user_tbl set state=?, city=?, street=? where userIdx=?";
+        Object[] params = new Object[] {
+                patchLocationReq.getState(), patchLocationReq.getCity(), patchLocationReq.getStreet(),
+                patchLocationReq.getUserIdx() };
+
+        this.jdbcTemplate.update(query, params);
+
+        return "관심 지역이 성공적으로 변경되었습니다.";
     }
 
     /** 유효성 검사 **/

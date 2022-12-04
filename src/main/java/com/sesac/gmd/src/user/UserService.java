@@ -1,6 +1,7 @@
 package com.sesac.gmd.src.user;
 
 import com.sesac.gmd.config.BaseException;
+import com.sesac.gmd.src.user.model.PatchLocationReq;
 import com.sesac.gmd.src.user.model.PatchNicknameReq;
 import com.sesac.gmd.src.user.model.PostUserReq;
 import com.sesac.gmd.src.user.model.PostUserRes;
@@ -56,6 +57,16 @@ public class UserService {
 
         try {
             return userDao.patchNickname(patchNicknameReq);
+
+        } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    /* 관심 지역 변경 API */
+    public String patchLocation(PatchLocationReq patchLocationReq) throws BaseException {
+        try {
+            return userDao.patchLocation(patchLocationReq);
 
         } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
             throw new BaseException(DATABASE_ERROR);

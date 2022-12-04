@@ -3,6 +3,7 @@ package com.sesac.gmd.src.user;
 import com.sesac.gmd.config.BaseException;
 import com.sesac.gmd.config.BaseResponse;
 import com.sesac.gmd.config.BaseResponseStatus;
+import com.sesac.gmd.src.user.model.PatchLocationReq;
 import com.sesac.gmd.src.user.model.PatchNicknameReq;
 import com.sesac.gmd.src.user.model.PostUserReq;
 import com.sesac.gmd.src.user.model.PostUserRes;
@@ -75,6 +76,25 @@ public class UserController {
                 String result = userService.patchNickname(patchNicknameReq);
                 return new BaseResponse<>(result);
             }
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /* 관심 지역 변경 API */
+    @PatchMapping("/location")
+    public BaseResponse<String> patchLocation(@RequestBody PatchLocationReq patchLocationReq) {
+        try {
+            // 유효한 JWT인지 확인
+            int userIdxByJwt = jwtService.getUserIdx();  // JWT에서 userIdx 추출
+
+            if(patchLocationReq.getUserIdx() != userIdxByJwt){
+                // userIdx와 접근한 유저가 같은지 확인
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            String result = userService.patchLocation(patchLocationReq);
+            return new BaseResponse<>(result);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
