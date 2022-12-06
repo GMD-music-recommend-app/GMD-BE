@@ -1,12 +1,17 @@
 package com.sesac.gmd.src.song;
 
 import com.sesac.gmd.config.BaseException;
+
 import com.sesac.gmd.src.song.model.PostPinReq;
 import com.sesac.gmd.src.song.model.PostPinRes;
+import com.sesac.gmd.src.song.model.PostCommentReq;
+import com.sesac.gmd.src.song.model.PostLikeReq;
+import com.sesac.gmd.src.song.model.PostLikeRes;
 import com.sesac.gmd.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sesac.gmd.config.BaseResponseStatus;
 import static com.sesac.gmd.config.BaseResponseStatus.DATABASE_ERROR;
 
 @Service
@@ -35,6 +40,21 @@ public class SongService {
             return new PostPinRes(pinIdx);
         } catch(Exception exception) {
             throw  new BaseException(DATABASE_ERROR);
+        }
+    }
+    
+    /* 핀 공감 & 공감 취소 API */
+    public PostLikeRes likeSong(int useridx, int idx){
+        return songDao.likeSong(useridx, idx);
+    }
+
+    /* 댓글 작성 API */
+    public int postComment(PostCommentReq postcommentReq) throws BaseException {
+        try{
+            int commentIdx = songDao.postComment(postcommentReq);
+            return commentIdx;
+        } catch(Exception exception){
+            throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
         }
     }
 }
