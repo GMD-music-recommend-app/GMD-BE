@@ -95,7 +95,7 @@ public class SongDao {
                 "    latitude, longitude, state, city, street\n" +
                 "from song_tbl\n" +
                 "    where ST_Distance_Sphere(POINT(?, ?), POINT(longitude, latitude)) <= 5000 and status='A'";
-        Object[] params = new Object[] {
+        Object[] params = new Object[]{
                 getPinsReq.getLongitude(), getPinsReq.getLatitude(),
                 getPinsReq.getLongitude(), getPinsReq.getLatitude(),
         };
@@ -110,6 +110,7 @@ public class SongDao {
                         rs.getString("city"),
                         rs.getString("street")
                 ), params);
+    }
 
     /* 핀 공감 & 공감 취소 API */
     public PostLikeRes likeSong(int useridx, int idx) {
@@ -134,9 +135,6 @@ public class SongDao {
             Object[] createProductParams = new Object[]{useridx, idx};
 
             this.jdbcTemplate.update(createProductQuery, createProductParams);
-
-            String getLastInsertIdxQuery = "select last_insert_id()";
-            int lastInsertIdx = this.jdbcTemplate.queryForObject(getLastInsertIdxQuery, int.class);
 
             return new PostLikeRes(useridx, idx);
 

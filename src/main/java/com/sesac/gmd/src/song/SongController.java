@@ -4,6 +4,7 @@ import com.sesac.gmd.config.BaseException;
 import com.sesac.gmd.config.BaseResponse;
 import com.sesac.gmd.config.BaseResponseStatus;
 import com.sesac.gmd.src.song.model.*;
+import com.sesac.gmd.src.user.model.UserRes;
 import com.sesac.gmd.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
