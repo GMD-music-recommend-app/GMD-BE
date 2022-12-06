@@ -3,35 +3,106 @@ package com.sesac.gmd.src.song;
 import com.sesac.gmd.config.BaseException;
 import com.sesac.gmd.config.BaseResponse;
 import com.sesac.gmd.config.BaseResponseStatus;
-import com.sesac.gmd.src.song.model.PostCommentReq;
-import com.sesac.gmd.src.song.model.PostCommentRes;
-import com.sesac.gmd.src.song.model.PostLikeReq;
-import com.sesac.gmd.src.song.model.PostLikeRes;
-import com.sesac.gmd.src.user.model.UserRes;
+import com.sesac.gmd.src.song.model.*;
 import com.sesac.gmd.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
-@RequestMapping("/song")
+import java.util.List;
+
+import static com.sesac.gmd.config.BaseResponseStatus.INVALID_USER_JWT;
+import static com.sesac.gmd.config.BaseResponseStatus.SUCCESS;
+import static com.sesac.gmd.utils.Validation.locationValidation;
+import static com.sesac.gmd.utils.Validation.pinValidation;
+
 @RestController
+@RequestMapping("/songs")
 public class SongController {
     @Autowired
     private SongProvider songProvider;
     @Autowired
-    private JwtService jwtService;
-    @Autowired
     private SongService songService;
-
     @Autowired
-    public SongController(SongProvider songProvider, SongService songService,JwtService jwtService){
+    private JwtService jwtService;
+
+    public SongController(SongProvider songProvider, SongService songService, JwtService jwtService) {
         this.songProvider = songProvider;
         this.songService = songService;
         this.jwtService = jwtService;
     }
 
+    /* 핀 생성 API */
+    @PostMapping("")
+    public BaseResponse<PostPinRes> createPin(@RequestBody PostPinReq postPinReq) {
+        try {
+            // 유효한 JWT인지 확인
+            int userIdxByJwt = jwtService.getUserIdx();  // JWT에서 userIdx 추출
 
-    //PIN곡 공감하기
+            if(postPinReq.getUserIdx() != userIdxByJwt){
+                // userIdx와 접근한 유저가 같은지 확인
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            // 빈 값 확인
+            BaseResponseStatus status = pinValidation(postPinReq);
+
+            if(status == SUCCESS) {
+                PostPinRes postPinRes = songService.createPin(postPinReq);
+                return new BaseResponse<>(postPinRes);
+            } else {
+                // 입력되지 않은 게 있으면
+                return new BaseResponse<>(status);
+            }
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /* 핀 반환 API */
+    @GetMapping("/info")
+    public BaseResponse<Pin> getPin(@RequestBody GetPinReq getPinReq) {
+        try {
+            if(getPinReq.getUserIdx() == 0) {
+                Pin getPinRes = songProvider.getPin(getPinReq);
+                return new BaseResponse<>(getPinRes);
+            } else {
+                // 유효한 JWT인지 확인
+                int userIdxByJwt = jwtService.getUserIdx();  // JWT에서 userIdx 추출
+
+                if(getPinReq.getUserIdx() != userIdxByJwt){
+                    // userIdx와 접근한 유저가 같은지 확인
+                    return new BaseResponse<>(INVALID_USER_JWT);
+                }
+
+                Pin getPinRes = songProvider.getPin(getPinReq);
+                return new BaseResponse<>(getPinRes);
+            }
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /* 핀 리스트 반환 API */
+    @GetMapping("/info-list")
+    public BaseResponse<List<GetPinsRes>> getPins(@RequestBody GetPinsReq getPinsReq) {
+        try {
+            BaseResponseStatus status = locationValidation(getPinsReq.getLatitude(), getPinsReq.getLongitude());
+
+            if(status == SUCCESS) {
+                List<GetPinsRes> getPinsRes = songProvider.getPins(getPinsReq);
+                return new BaseResponse<>(getPinsRes);
+            } else {
+                return new BaseResponse<>(status);
+            }
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }    
+    
+    /* 핀 공감 & 공감 취소 API */
     @ResponseBody
     @PostMapping("/liking/{userIdx}")
     public BaseResponse<PostLikeRes> likeSong(@AuthenticationPrincipal UserRes userRes, @PathVariable int userIdx){
@@ -48,8 +119,8 @@ public class SongController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
-
-    //댓글 작성하기
+    
+    /* 댓글 작성 API */
     @ResponseBody
     @PostMapping("/comment/{userIdx}")
     public BaseResponse<PostCommentRes> postComment(@RequestBody PostCommentReq postCommentReq, @PathVariable int userIdx){
@@ -67,5 +138,4 @@ public class SongController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
-
 }

@@ -1,5 +1,7 @@
 package com.sesac.gmd.src.user;
 
+import com.sesac.gmd.src.user.model.PatchLocationReq;
+import com.sesac.gmd.src.user.model.PatchNicknameReq;
 import com.sesac.gmd.src.user.model.PostUserReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,6 +34,29 @@ public class UserDao {
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
     }
 
+    /* 닉네임 변경 API */
+    public String patchNickname(PatchNicknameReq patchNicknameReq) {
+        String query = "update user_tbl set nickname=? where userIdx=?";
+        Object[] params = new Object[] {
+                patchNicknameReq.getNickname(), patchNicknameReq.getUserIdx() };
+
+        this.jdbcTemplate.update(query, params);
+
+        return "닉네임이 성공적으로 변경되었습니다.";
+    }
+
+    /* 관심 지역 변경 API */
+    public String patchLocation(PatchLocationReq patchLocationReq) {
+        String query = "update user_tbl set state=?, city=?, street=? where userIdx=?";
+        Object[] params = new Object[] {
+                patchLocationReq.getState(), patchLocationReq.getCity(), patchLocationReq.getStreet(),
+                patchLocationReq.getUserIdx() };
+
+        this.jdbcTemplate.update(query, params);
+
+        return "관심 지역이 성공적으로 변경되었습니다.";
+    }
+
     /** 유효성 검사 **/
 
     /* 중복 이메일 검사 */
@@ -39,5 +64,12 @@ public class UserDao {
         String query = "select exists(select * from user_tbl where email = ?)";
 
         return this.jdbcTemplate.queryForObject(query, int.class, email);
+    }
+
+    /* 중복 닉네임 검사 */
+    public int checkNickname(String nickname) {
+        String query = "select exists(select * from user_tbl where nickname = ?)";
+
+        return this.jdbcTemplate.queryForObject(query, int.class, nickname);
     }
 }
