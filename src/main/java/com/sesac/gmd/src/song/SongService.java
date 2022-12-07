@@ -44,8 +44,8 @@ public class SongService {
     }
     
     /* 핀 공감 & 공감 취소 API */
-    public PostLikeRes likeSong(int useridx, int idx){
-        return songDao.likeSong(useridx, idx);
+    public PostLikeRes likeSong(int useridx, int pinidx){
+        return songDao.likeSong(useridx, pinidx);
     }
 
     /* 댓글 작성 API */
