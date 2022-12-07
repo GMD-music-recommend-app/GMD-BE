@@ -9,5 +9,4 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetPinReq {
     private int userIdx;
-    private int pinIdx;
 }

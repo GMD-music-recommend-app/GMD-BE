@@ -25,10 +25,10 @@ public class SongProvider {
     /** API **/
 
     /* 핀 반환 API */
-    public Pin getPin(GetPinReq getPinReq) throws BaseException {
+    public Pin getPin(GetPinReq getPinReq, int pinIdx) throws BaseException {
         try {
-            List<Comment> comments = songDao.getComments(getPinReq.getPinIdx());
-            return songDao.getPin(getPinReq, comments);
+            List<Comment> comments = songDao.getComments(pinIdx);
+            return songDao.getPin(getPinReq, comments, pinIdx);
         } catch(Exception exception) {
             throw  new BaseException(DATABASE_ERROR);
         }

@@ -19,6 +19,7 @@ public class Pin {
     private String reason;
     private String hashtag;
     private String isLiked;
+    private String isMade;
     private List<Comment> comments;
     private double latitude;
     private double longitude;

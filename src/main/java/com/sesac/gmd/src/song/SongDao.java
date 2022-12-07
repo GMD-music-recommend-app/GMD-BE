@@ -37,18 +37,19 @@ public class SongDao {
     }
 
     /* 핀 반환 API */
-    public Pin getPin(GetPinReq getPinReq, List<Comment> comments) {
+    public Pin getPin(GetPinReq getPinReq, List<Comment> comments, int pinIdx) {
         String query = "select pin.pinIdx, pin.userIdx, user.nickname,\n" +
                 "       pin.songIdx, pin.title, pin.singer, pin.album, pin.albumCover,\n" +
                 "       pin.reason, pin.hashtag,\n" +
                 "       exists(select * from pin_like_tbl where userIdx=?) as isLiked,\n" +
+                "       if(pin.userIdx=?, 1, 0) as isMade, \n" +
                 "       pin.latitude, pin.longitude, pin.state, pin.city, pin.street\n" +
                 "from pin_tbl as pin\n" +
             "        join user_tbl as user\n " +
                 "       on user.userIdx = pin.userIdx\n" +
             "    where pin.pinIdx=? and pin.status='A'";
         Object[] params = new Object[] {
-                getPinReq.getUserIdx(), getPinReq.getPinIdx()};
+                getPinReq.getUserIdx(), getPinReq.getUserIdx(), pinIdx};
 
         return this.jdbcTemplate.queryForObject(query,
                 (rs, rowNum) -> new Pin(
@@ -63,6 +64,7 @@ public class SongDao {
                     rs.getString("reason"),
                     rs.getString("hashtag"),
                     rs.getString("isLiked"),
+                    rs.getString("isMade"),
                     comments,
                     rs.getInt("latitude"),
                     rs.getInt("longitude"),

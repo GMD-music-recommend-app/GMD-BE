@@ -61,11 +61,11 @@ public class SongController {
     }
 
     /* 핀 반환 API */
-    @GetMapping("/info")
-    public BaseResponse<Pin> getPin(@RequestBody GetPinReq getPinReq) {
+    @GetMapping("/info/{pinIdx}")
+    public BaseResponse<Pin> getPin(@RequestBody GetPinReq getPinReq, @PathVariable int pinIdx) {
         try {
             if(getPinReq.getUserIdx() == 0) {
-                Pin getPinRes = songProvider.getPin(getPinReq);
+                Pin getPinRes = songProvider.getPin(getPinReq, pinIdx);
                 return new BaseResponse<>(getPinRes);
             } else {
                 // 유효한 JWT인지 확인
@@ -76,7 +76,7 @@ public class SongController {
                     return new BaseResponse<>(INVALID_USER_JWT);
                 }
 
-                Pin getPinRes = songProvider.getPin(getPinReq);
+                Pin getPinRes = songProvider.getPin(getPinReq, pinIdx);
                 return new BaseResponse<>(getPinRes);
             }
 
