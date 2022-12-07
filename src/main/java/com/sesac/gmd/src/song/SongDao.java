@@ -44,9 +44,11 @@ public class SongDao {
                 "       exists(select * from pin_like_tbl where userIdx=?) as isLiked,\n" +
                 "       pin.latitude, pin.longitude, pin.state, pin.city, pin.street\n" +
                 "from pin_tbl as pin\n" +
-                "join user_tbl user on user.userIdx = pin.userIdx\n" +
-                "    where pin.status='A'";
-        int params = getPinReq.getUserIdx();
+            "        join user_tbl as user\n " +
+                "       on user.userIdx = pin.userIdx\n" +
+            "    where pin.pinIdx=? and pin.status='A'";
+        Object[] params = new Object[] {
+                getPinReq.getUserIdx(), getPinReq.getPinIdx()};
 
         return this.jdbcTemplate.queryForObject(query,
                 (rs, rowNum) -> new Pin(
@@ -79,7 +81,7 @@ public class SongDao {
                 "    join user_tbl as user\n" +
                 "        on user.userIdx = comment.userIdx\n" +
                 "        and user.status='A'\n" +
-                "where songIdx=? and comment.status='A'";
+                "where pinIdx=? and comment.status='A'";
 
         return this.jdbcTemplate.query(query,
                 (rs, rowNum) -> new Comment(

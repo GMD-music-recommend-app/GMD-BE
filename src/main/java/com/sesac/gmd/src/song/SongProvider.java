@@ -28,7 +28,6 @@ public class SongProvider {
     public Pin getPin(GetPinReq getPinReq) throws BaseException {
         try {
             List<Comment> comments = songDao.getComments(getPinReq.getPinIdx());
-            System.out.println("AFasdfsafsadf");
             return songDao.getPin(getPinReq, comments);
         } catch(Exception exception) {
             throw  new BaseException(DATABASE_ERROR);

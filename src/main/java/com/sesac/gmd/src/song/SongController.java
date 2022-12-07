@@ -133,8 +133,8 @@ public class SongController {
             }
 
             //userid 같으면 댓글 생성
-            int commentidx = songService.postComment(postCommentReq);
-            return new BaseResponse<>(new PostCommentRes(userIdx, commentidx));
+            int commentIdx = songService.postComment(postCommentReq);
+            return new BaseResponse<>(new PostCommentRes(userIdx, commentIdx));
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
