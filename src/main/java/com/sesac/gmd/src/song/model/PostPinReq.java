@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostPinReq {
     private int userIdx;
+    private int songIdx;
     private String title;
     private String singer;
     private String album;
