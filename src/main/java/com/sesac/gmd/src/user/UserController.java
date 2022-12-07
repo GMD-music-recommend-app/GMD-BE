@@ -8,6 +8,9 @@ import com.sesac.gmd.src.user.model.PatchNicknameReq;
 import com.sesac.gmd.src.user.model.PostUserReq;
 import com.sesac.gmd.src.user.model.PostUserRes;
 import com.sesac.gmd.utils.JwtService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +36,7 @@ public class UserController {
     }
 
     /* 회원가입 API (카카오 제외) */
+    @ApiOperation("임시 회원가입")
     @PostMapping("/sign-up")
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
         // NULL 값 체크
@@ -58,6 +62,10 @@ public class UserController {
     }
 
     /* 닉네임 변경 API */
+    @ApiOperation("닉네임 변경")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
+    })
     @PatchMapping("/nickname/{userIdx}")
     public BaseResponse<String> patchNickname(@RequestBody PatchNicknameReq patchNicknameReq, @PathVariable int userIdx) {
         try {
@@ -82,6 +90,10 @@ public class UserController {
     }
 
     /* 관심 지역 변경 API */
+    @ApiOperation("관심 지역 변경")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
+    })
     @PatchMapping("/location/{userIdx}")
     public BaseResponse<String> patchLocation(@RequestBody PatchLocationReq patchLocationReq, @PathVariable int userIdx) {
         try {
