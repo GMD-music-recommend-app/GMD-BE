@@ -6,6 +6,11 @@ import com.sesac.gmd.config.BaseResponseStatus;
 import com.sesac.gmd.src.song.model.*;
 import com.sesac.gmd.src.user.model.UserRes;
 import com.sesac.gmd.utils.JwtService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.headers.Header;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,6 +39,10 @@ public class SongController {
     }
 
     /* 핀 생성 API */
+    @ApiOperation("핀 생성")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
+    })
     @PostMapping("")
     public BaseResponse<PostPinRes> createPin(@RequestBody PostPinReq postPinReq) {
         try {
@@ -61,11 +70,15 @@ public class SongController {
     }
 
     /* 핀 반환 API */
-    @GetMapping("/info")
-    public BaseResponse<Pin> getPin(@RequestBody GetPinReq getPinReq) {
+    @ApiOperation("핀 정보 반환")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
+    })
+    @GetMapping("/info/{pinIdx}")
+    public BaseResponse<Pin> getPin(@RequestBody GetPinReq getPinReq, @PathVariable int pinIdx) {
         try {
             if(getPinReq.getUserIdx() == 0) {
-                Pin getPinRes = songProvider.getPin(getPinReq);
+                Pin getPinRes = songProvider.getPin(getPinReq, pinIdx);
                 return new BaseResponse<>(getPinRes);
             } else {
                 // 유효한 JWT인지 확인
@@ -76,7 +89,7 @@ public class SongController {
                     return new BaseResponse<>(INVALID_USER_JWT);
                 }
 
-                Pin getPinRes = songProvider.getPin(getPinReq);
+                Pin getPinRes = songProvider.getPin(getPinReq, pinIdx);
                 return new BaseResponse<>(getPinRes);
             }
 
@@ -86,6 +99,7 @@ public class SongController {
     }
 
     /* 핀 리스트 반환 API */
+    @ApiOperation("반경 내 핀 리스트 반환")
     @GetMapping("/info-list")
     public BaseResponse<List<GetPinsRes>> getPins(@RequestBody GetPinsReq getPinsReq) {
         try {
@@ -104,6 +118,10 @@ public class SongController {
     }    
     
     /* 핀 공감 & 공감 취소 API */
+    @ApiOperation("핀 공감 & 공감 취소")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
+    })
     @ResponseBody
     @PostMapping("/liking/{userIdx}")
     public BaseResponse<PostLikeRes> likeSong(@AuthenticationPrincipal UserRes userRes, @PathVariable int userIdx){
@@ -122,6 +140,10 @@ public class SongController {
     }
     
     /* 댓글 작성 API */
+    @ApiOperation("핀 댓글 작성")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
+    })
     @ResponseBody
     @PostMapping("/comment/{userIdx}")
     public BaseResponse<PostCommentRes> postComment(@RequestBody PostCommentReq postCommentReq, @PathVariable int userIdx){
@@ -133,8 +155,8 @@ public class SongController {
             }
 
             //userid 같으면 댓글 생성
-            int commentidx = songService.postComment(postCommentReq);
-            return new BaseResponse<>(new PostCommentRes(userIdx, commentidx));
+            int commentIdx = songService.postComment(postCommentReq);
+            return new BaseResponse<>(new PostCommentRes(userIdx, commentIdx));
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }

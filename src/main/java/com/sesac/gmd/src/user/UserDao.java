@@ -35,10 +35,10 @@ public class UserDao {
     }
 
     /* 닉네임 변경 API */
-    public String patchNickname(PatchNicknameReq patchNicknameReq) {
+    public String patchNickname(PatchNicknameReq patchNicknameReq, int userIdx) {
         String query = "update user_tbl set nickname=? where userIdx=?";
         Object[] params = new Object[] {
-                patchNicknameReq.getNickname(), patchNicknameReq.getUserIdx() };
+                patchNicknameReq.getNickname(), userIdx};
 
         this.jdbcTemplate.update(query, params);
 
@@ -46,11 +46,11 @@ public class UserDao {
     }
 
     /* 관심 지역 변경 API */
-    public String patchLocation(PatchLocationReq patchLocationReq) {
+    public String patchLocation(PatchLocationReq patchLocationReq, int userIdx) {
         String query = "update user_tbl set state=?, city=?, street=? where userIdx=?";
         Object[] params = new Object[] {
                 patchLocationReq.getState(), patchLocationReq.getCity(), patchLocationReq.getStreet(),
-                patchLocationReq.getUserIdx() };
+                userIdx };
 
         this.jdbcTemplate.update(query, params);
 

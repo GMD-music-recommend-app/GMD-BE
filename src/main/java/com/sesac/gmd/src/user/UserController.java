@@ -8,6 +8,9 @@ import com.sesac.gmd.src.user.model.PatchNicknameReq;
 import com.sesac.gmd.src.user.model.PostUserReq;
 import com.sesac.gmd.src.user.model.PostUserRes;
 import com.sesac.gmd.utils.JwtService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +36,7 @@ public class UserController {
     }
 
     /* 회원가입 API (카카오 제외) */
+    @ApiOperation("임시 회원가입")
     @PostMapping("/sign-up")
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
         // NULL 값 체크
@@ -58,8 +62,12 @@ public class UserController {
     }
 
     /* 닉네임 변경 API */
-    @PatchMapping("/nickname")
-    public BaseResponse<String> patchNickname(@RequestBody PatchNicknameReq patchNicknameReq) {
+    @ApiOperation("닉네임 변경")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
+    })
+    @PatchMapping("/nickname/{userIdx}")
+    public BaseResponse<String> patchNickname(@RequestBody PatchNicknameReq patchNicknameReq, @PathVariable int userIdx) {
         try {
             // 닉네임이 비어있는지 확인
             if(patchNicknameReq.getNickname().isBlank()) {
@@ -68,12 +76,12 @@ public class UserController {
                 // 유효한 JWT인지 확인
                 int userIdxByJwt = jwtService.getUserIdx();  // JWT에서 userIdx 추출
 
-                if(patchNicknameReq.getUserIdx() != userIdxByJwt){
+                if(userIdx != userIdxByJwt){
                     // userIdx와 접근한 유저가 같은지 확인
                     return new BaseResponse<>(INVALID_USER_JWT);
                 }
 
-                String result = userService.patchNickname(patchNicknameReq);
+                String result = userService.patchNickname(patchNicknameReq, userIdx);
                 return new BaseResponse<>(result);
             }
         } catch (BaseException exception) {
@@ -82,18 +90,22 @@ public class UserController {
     }
 
     /* 관심 지역 변경 API */
-    @PatchMapping("/location")
-    public BaseResponse<String> patchLocation(@RequestBody PatchLocationReq patchLocationReq) {
+    @ApiOperation("관심 지역 변경")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
+    })
+    @PatchMapping("/location/{userIdx}")
+    public BaseResponse<String> patchLocation(@RequestBody PatchLocationReq patchLocationReq, @PathVariable int userIdx) {
         try {
             // 유효한 JWT인지 확인
             int userIdxByJwt = jwtService.getUserIdx();  // JWT에서 userIdx 추출
 
-            if(patchLocationReq.getUserIdx() != userIdxByJwt){
+            if(userIdx != userIdxByJwt){
                 // userIdx와 접근한 유저가 같은지 확인
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
 
-            String result = userService.patchLocation(patchLocationReq);
+            String result = userService.patchLocation(patchLocationReq, userIdx);
             return new BaseResponse<>(result);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));

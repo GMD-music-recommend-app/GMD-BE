@@ -49,14 +49,14 @@ public class UserService {
     }
 
     /* 닉네임 변경 API */
-    public String patchNickname(PatchNicknameReq patchNicknameReq) throws BaseException {
+    public String patchNickname(PatchNicknameReq patchNicknameReq, int userIdx) throws BaseException {
         // 닉네임 중복 체크
         if (userProvider.checkNickname(patchNicknameReq.getNickname()) == 1) {
             throw new BaseException(POST_USERS_EXISTS_NICKNAME);
         }
 
         try {
-            return userDao.patchNickname(patchNicknameReq);
+            return userDao.patchNickname(patchNicknameReq, userIdx);
 
         } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
             throw new BaseException(DATABASE_ERROR);
@@ -64,9 +64,9 @@ public class UserService {
     }
 
     /* 관심 지역 변경 API */
-    public String patchLocation(PatchLocationReq patchLocationReq) throws BaseException {
+    public String patchLocation(PatchLocationReq patchLocationReq, int userIdx) throws BaseException {
         try {
-            return userDao.patchLocation(patchLocationReq);
+            return userDao.patchLocation(patchLocationReq, userIdx);
 
         } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
             throw new BaseException(DATABASE_ERROR);

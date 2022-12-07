@@ -13,4 +13,5 @@ public class GetPinsRes {
     private String state;
     private String city;
     private String street;
+    private String albumCover;
 }

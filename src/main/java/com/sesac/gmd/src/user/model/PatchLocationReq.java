@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PatchLocationReq {
-    private int userIdx;
     private String state;
     private String city;
     private String street;

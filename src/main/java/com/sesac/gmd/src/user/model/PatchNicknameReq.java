@@ -8,6 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PatchNicknameReq {
-    private int userIdx;
     private String nickname;
 }

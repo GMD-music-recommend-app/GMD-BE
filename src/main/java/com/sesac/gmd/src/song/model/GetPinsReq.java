@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetPinsReq {
+    private double radius;
     private double latitude;
     private double longitude;
 }

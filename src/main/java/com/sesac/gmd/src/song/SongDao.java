@@ -37,16 +37,19 @@ public class SongDao {
     }
 
     /* 핀 반환 API */
-    public Pin getPin(GetPinReq getPinReq, List<Comment> comments) {
+    public Pin getPin(GetPinReq getPinReq, List<Comment> comments, int pinIdx) {
         String query = "select pin.pinIdx, pin.userIdx, user.nickname,\n" +
                 "       pin.songIdx, pin.title, pin.singer, pin.album, pin.albumCover,\n" +
                 "       pin.reason, pin.hashtag,\n" +
                 "       exists(select * from pin_like_tbl where userIdx=?) as isLiked,\n" +
+                "       if(pin.userIdx=?, 1, 0) as isMade, \n" +
                 "       pin.latitude, pin.longitude, pin.state, pin.city, pin.street\n" +
                 "from pin_tbl as pin\n" +
-                "join user_tbl user on user.userIdx = pin.userIdx\n" +
-                "    where pin.status='A'";
-        int params = getPinReq.getUserIdx();
+            "        join user_tbl as user\n " +
+                "       on user.userIdx = pin.userIdx\n" +
+            "    where pin.pinIdx=? and pin.status='A'";
+        Object[] params = new Object[] {
+                getPinReq.getUserIdx(), getPinReq.getUserIdx(), pinIdx};
 
         return this.jdbcTemplate.queryForObject(query,
                 (rs, rowNum) -> new Pin(
@@ -61,6 +64,7 @@ public class SongDao {
                     rs.getString("reason"),
                     rs.getString("hashtag"),
                     rs.getString("isLiked"),
+                    rs.getString("isMade"),
                     comments,
                     rs.getInt("latitude"),
                     rs.getInt("longitude"),
@@ -79,7 +83,7 @@ public class SongDao {
                 "    join user_tbl as user\n" +
                 "        on user.userIdx = comment.userIdx\n" +
                 "        and user.status='A'\n" +
-                "where songIdx=? and comment.status='A'";
+                "where pinIdx=? and comment.status='A'";
 
         return this.jdbcTemplate.query(query,
                 (rs, rowNum) -> new Comment(
@@ -94,12 +98,14 @@ public class SongDao {
     public List<GetPinsRes> getPins(GetPinsReq getPinsReq) {
         String query = "select pinIdx,\n" +
                 "    ST_Distance_Sphere(POINT(?, ?), POINT(longitude, latitude)) as distance,\n" +
-                "    latitude, longitude, state, city, street\n" +
-                "from pin_tbl\n" +
-                "    where ST_Distance_Sphere(POINT(?, ?), POINT(longitude, latitude)) <= 5000 and status='A'";
+                "    latitude, longitude, state, city, street, \n" +
+                "    albumCover \n" +
+                "from pin_tbl \n" +
+                "    where ST_Distance_Sphere(POINT(?, ?), POINT(longitude, latitude)) <= ? and status='A'";
         Object[] params = new Object[]{
                 getPinsReq.getLongitude(), getPinsReq.getLatitude(),
                 getPinsReq.getLongitude(), getPinsReq.getLatitude(),
+                getPinsReq.getRadius()
         };
 
         return this.jdbcTemplate.query(query,
@@ -110,7 +116,8 @@ public class SongDao {
                         rs.getDouble("longitude"),
                         rs.getString("state"),
                         rs.getString("city"),
-                        rs.getString("street")
+                        rs.getString("street"),
+                        rs.getString("albumCover")
                 ), params);
     }
 
