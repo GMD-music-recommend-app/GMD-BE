@@ -96,12 +96,14 @@ public class SongDao {
     public List<GetPinsRes> getPins(GetPinsReq getPinsReq) {
         String query = "select pinIdx,\n" +
                 "    ST_Distance_Sphere(POINT(?, ?), POINT(longitude, latitude)) as distance,\n" +
-                "    latitude, longitude, state, city, street\n" +
-                "from pin_tbl\n" +
-                "    where ST_Distance_Sphere(POINT(?, ?), POINT(longitude, latitude)) <= 5000 and status='A'";
+                "    latitude, longitude, state, city, street, \n" +
+                "    albumCover \n" +
+                "from pin_tbl \n" +
+                "    where ST_Distance_Sphere(POINT(?, ?), POINT(longitude, latitude)) <= ? and status='A'";
         Object[] params = new Object[]{
                 getPinsReq.getLongitude(), getPinsReq.getLatitude(),
                 getPinsReq.getLongitude(), getPinsReq.getLatitude(),
+                getPinsReq.getRadius()
         };
 
         return this.jdbcTemplate.query(query,
@@ -112,7 +114,8 @@ public class SongDao {
                         rs.getDouble("longitude"),
                         rs.getString("state"),
                         rs.getString("city"),
-                        rs.getString("street")
+                        rs.getString("street"),
+                        rs.getString("albumCover")
                 ), params);
     }
 
