@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PostCommentReq {
     private int userIdx;
-    private int songIdx;
+    private int pinIdx;
     private String content;
 
 }

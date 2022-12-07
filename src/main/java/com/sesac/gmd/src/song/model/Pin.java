@@ -11,6 +11,7 @@ public class Pin {
     private int pinIdx;
     private int userIdx;
     private String nickname;
+    private int songIdx;
     private String title;
     private String singer;
     private String album;

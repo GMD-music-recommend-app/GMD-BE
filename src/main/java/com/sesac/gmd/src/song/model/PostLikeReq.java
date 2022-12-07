@@ -9,5 +9,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PostLikeReq {
     private int userIdx;
-    private int songIdx;
+    private int pinIdx;
 }
