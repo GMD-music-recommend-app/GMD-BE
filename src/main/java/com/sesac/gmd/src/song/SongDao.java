@@ -121,6 +121,14 @@ public class SongDao {
                 ), params);
     }
 
+    /* 핀 삭제 API */
+    public String deletePin(int pinIdx) {
+        String query = "update pin_tbl set status='I' where pinIdx=?";
+
+        this.jdbcTemplate.update(query, pinIdx);
+        return "성공적으로 삭제되었습니다";
+    }
+
     /* 핀 공감 & 공감 취소 API */
     public PostLikeRes likeSong(int userIdx, int pinIdx) {
         String getLikeQuery = "select * from pin_like_tbl where pinIdx=? and userIdx=?";

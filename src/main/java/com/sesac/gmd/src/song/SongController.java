@@ -117,7 +117,28 @@ public class SongController {
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
-    }    
+    }
+
+    /* 핀 삭제 API  */
+    @ApiOperation("핀 삭제")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
+    })
+    @PatchMapping("/status/{pinIdx}")
+    public BaseResponse<String> deletePin(@PathVariable int pinIdx, @RequestBody DeletePinReq deletePinReq) {
+        try{
+            int userIdxJwt = jwtService.getUserIdx();
+            //useridx로 접근한 유저가 같은 유저인지 확인하기
+            if(deletePinReq.getUserIdx() != userIdxJwt){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+
+            String result = songService.deletePin(pinIdx);
+            return new BaseResponse<>(result);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
     
     /* 핀 공감 & 공감 취소 API */
     @ApiOperation("핀 공감 & 공감 취소")

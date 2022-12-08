@@ -34,10 +34,19 @@ public class SongService {
     /* PIN 생성 API */
     public PostPinRes createPin(PostPinReq postPinReq) throws BaseException {
         try {
-            System.out.println(postPinReq);
             int pinIdx = songDao.createPin(postPinReq);
 
             return new PostPinRes(pinIdx);
+        } catch(Exception exception) {
+            throw  new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    /* 핀 삭제 API */
+    public String deletePin(int pinIdx) throws BaseException {
+        try {
+
+            return songDao.deletePin(pinIdx);
         } catch(Exception exception) {
             throw  new BaseException(DATABASE_ERROR);
         }
