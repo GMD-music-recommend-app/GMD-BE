@@ -3,6 +3,7 @@ package com.sesac.gmd.src.user;
 import com.sesac.gmd.src.user.model.PatchLocationReq;
 import com.sesac.gmd.src.user.model.PatchNicknameReq;
 import com.sesac.gmd.src.user.model.PostUserReq;
+import com.sesac.gmd.src.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -32,6 +33,17 @@ public class UserDao {
 
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
+    }
+
+    /* 유저 정보 반환 API */
+    public User getUser(int userIdx) {
+        String query = "select userIdx, nickname from user_tbl where userIdx=?";
+
+        return this.jdbcTemplate.queryForObject(query,
+                (rs, rowNum) -> new User(
+                        rs.getInt("userIdx"),
+                        rs.getString("nickname")
+                ), userIdx);
     }
 
     /* 닉네임 변경 API */

@@ -1,6 +1,7 @@
 package com.sesac.gmd.src.user;
 
 import com.sesac.gmd.config.BaseException;
+import com.sesac.gmd.src.user.model.User;
 import com.sesac.gmd.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,15 @@ public class UserProvider {
     }
 
     /** API **/
+
+    /* 유저 정보 반환 API */
+    public User getUser(int userIdx) throws BaseException {
+        try {
+            return userDao.getUser(userIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
     /** 유효성 검사 **/
 
