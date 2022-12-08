@@ -106,11 +106,11 @@ public class SongController {
     /* 핀 공감 & 공감 취소 API */
     @ResponseBody
     @PostMapping("/liking/{userIdx}")
-    public BaseResponse<PostLikeRes> likeSong(@AuthenticationPrincipal UserRes userRes, @PathVariable int userIdx, PostLikeReq postLikeReq){
+    public BaseResponse<PostLikeRes> likeSong(@PathVariable int userIdx, PostLikeReq postLikeReq){
         try{
             int userIdxJwt = jwtService.getUserIdx();
             //useridx로 접근한 유저가 같은 유저인지 확인하기
-            if(userRes.getUserIdx() != userIdxJwt){
+            if(postLikeReq.getUserIdx() != userIdxJwt){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
             }
             //핀 아이디 갖고오기

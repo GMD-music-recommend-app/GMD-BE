@@ -146,7 +146,7 @@ public class SongDao {
 
     /* 댓글 작성 API */
     public int postComment(PostCommentReq postCommentReq){
-        String postCommentQuery = "insert into pin_comment_tbl values (null, ?, ?, ?, default, default, default) select userIdx, pinIdx from pin_comment_tbl where userIdx = ? and pinIdx";
+        String postCommentQuery = "insert into pin_comment_tbl values (null, ?, ?, ?, default, default, default)";
         Object[] postCommentParams = new Object[]{postCommentReq.getUserIdx(), postCommentReq.getPinIdx(), postCommentReq.getContent()};
 
         this.jdbcTemplate.update(postCommentQuery, postCommentParams);
