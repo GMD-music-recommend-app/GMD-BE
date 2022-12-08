@@ -37,7 +37,7 @@ public class SongDao {
     }
 
     /* 핀 반환 API */
-    public Pin getPin(GetPinReq getPinReq, List<Comment> comments, int pinIdx) {
+    public Pin getPin(int userIdx, List<Comment> comments, int pinIdx) {
         String query = "select pin.pinIdx, pin.userIdx, user.nickname,\n" +
                 "       pin.songIdx, pin.title, pin.singer, pin.album, pin.albumCover,\n" +
                 "       pin.reason, pin.hashtag,\n" +
@@ -49,7 +49,7 @@ public class SongDao {
                 "       on user.userIdx = pin.userIdx\n" +
             "    where pin.pinIdx=? and pin.status='A'";
         Object[] params = new Object[] {
-                getPinReq.getUserIdx(), getPinReq.getUserIdx(), pinIdx};
+                userIdx, userIdx, pinIdx};
 
         return this.jdbcTemplate.queryForObject(query,
                 (rs, rowNum) -> new Pin(

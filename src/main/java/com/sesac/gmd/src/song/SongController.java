@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.headers.Header;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
@@ -75,21 +76,21 @@ public class SongController {
             @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
     })
     @GetMapping("/info/{pinIdx}")
-    public BaseResponse<Pin> getPin(@RequestBody GetPinReq getPinReq, @PathVariable int pinIdx) {
+    public BaseResponse<Pin> getPin(@PathVariable int pinIdx, @RequestParam int userIdx) {
         try {
-            if(getPinReq.getUserIdx() == 0) {
-                Pin getPinRes = songProvider.getPin(getPinReq, pinIdx);
+            if(userIdx == 0) {
+                Pin getPinRes = songProvider.getPin(userIdx, pinIdx);
                 return new BaseResponse<>(getPinRes);
             } else {
                 // 유효한 JWT인지 확인
                 int userIdxByJwt = jwtService.getUserIdx();  // JWT에서 userIdx 추출
 
-                if(getPinReq.getUserIdx() != userIdxByJwt){
+                if(userIdx != userIdxByJwt){
                     // userIdx와 접근한 유저가 같은지 확인
                     return new BaseResponse<>(INVALID_USER_JWT);
                 }
 
-                Pin getPinRes = songProvider.getPin(getPinReq, pinIdx);
+                Pin getPinRes = songProvider.getPin(userIdx, pinIdx);
                 return new BaseResponse<>(getPinRes);
             }
 
@@ -101,9 +102,10 @@ public class SongController {
     /* 핀 리스트 반환 API */
     @ApiOperation("반경 내 핀 리스트 반환")
     @GetMapping("/info-list")
-    public BaseResponse<List<GetPinsRes>> getPins(@RequestBody GetPinsReq getPinsReq) {
+    public BaseResponse<List<GetPinsRes>> getPins(@RequestParam int radius, @RequestParam double latitude, @RequestParam double longitude) {
         try {
-            BaseResponseStatus status = locationValidation(getPinsReq.getLatitude(), getPinsReq.getLongitude());
+            BaseResponseStatus status = locationValidation(latitude, longitude);
+            GetPinsReq getPinsReq = new GetPinsReq(radius, latitude, longitude);
 
             if(status == SUCCESS) {
                 List<GetPinsRes> getPinsRes = songProvider.getPins(getPinsReq);
