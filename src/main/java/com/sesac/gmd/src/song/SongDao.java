@@ -121,6 +121,27 @@ public class SongDao {
                 ), params);
     }
 
+    /* 내가 생성한 핀 리스트 반환 API */
+    public List<GetMyPinsRes> getMyPins(int userIdx) {
+        String query = "select pinIdx, userIdx, \n" +
+                "   title, singer, albumCover, \n" +
+                "   state, city, street \n" +
+                "from pin_tbl \n" +
+                "   where userIdx=? and status='A'";
+
+        return this.jdbcTemplate.query(query,
+                (rs, rowNum) -> new GetMyPinsRes(
+                        rs.getInt("pinIdx"),
+                        rs.getInt("userIdx"),
+                        rs.getString("title"),
+                        rs.getString("singer"),
+                        rs.getString("albumCover"),
+                        rs.getString("state"),
+                        rs.getString("city"),
+                        rs.getString("street")
+                ), userIdx);
+    }
+
     /* 핀 삭제 API */
     public String deletePin(int pinIdx) {
         String query = "update pin_tbl set status='I' where pinIdx=?";
