@@ -126,15 +126,17 @@ public class SongController {
     })
     @ResponseBody
     @PostMapping("/liking/{userIdx}")
-    public BaseResponse<PostLikeRes> likeSong(@AuthenticationPrincipal UserRes userRes, @PathVariable int userIdx){
+    public BaseResponse<PostLikeRes> likeSong(@PathVariable int userIdx, PostLikeReq postLikeReq){
         try{
             int userIdxJwt = jwtService.getUserIdx();
             //useridx로 접근한 유저가 같은 유저인지 확인하기
-            if(userRes.getUserIdx() != userIdxJwt){
+            if(postLikeReq.getUserIdx() != userIdxJwt){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
             }
-
-            PostLikeRes postLikeRes = songService.likeSong(userRes.getUserIdx(), userIdx);
+            //핀 아이디 갖고오기
+            int pinIdx = postLikeReq.getPinIdx();
+            //유저 아이디랑 핀 아이디 넘겨주기
+            PostLikeRes postLikeRes = songService.likeSong(userIdx, pinIdx);
             return new BaseResponse<>(postLikeRes);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
@@ -148,7 +150,7 @@ public class SongController {
     })
     @ResponseBody
     @PostMapping("/comment/{userIdx}")
-    public BaseResponse<PostCommentRes> postComment(@RequestBody PostCommentReq postCommentReq, @PathVariable int userIdx){
+    public BaseResponse<PostCommentRes> postComment(PostCommentReq postCommentReq, @PathVariable int userIdx){
         try{
             int userIdxJwt = jwtService.getUserIdx();
             //useridx로 접근한 유저가 같은 유저인지 확인하기
