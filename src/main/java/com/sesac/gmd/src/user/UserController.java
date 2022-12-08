@@ -3,10 +3,7 @@ package com.sesac.gmd.src.user;
 import com.sesac.gmd.config.BaseException;
 import com.sesac.gmd.config.BaseResponse;
 import com.sesac.gmd.config.BaseResponseStatus;
-import com.sesac.gmd.src.user.model.PatchLocationReq;
-import com.sesac.gmd.src.user.model.PatchNicknameReq;
-import com.sesac.gmd.src.user.model.PostUserReq;
-import com.sesac.gmd.src.user.model.PostUserRes;
+import com.sesac.gmd.src.user.model.*;
 import com.sesac.gmd.utils.JwtService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -58,6 +55,29 @@ public class UserController {
         } else {
             // 입력되지 않은 게 있으면
             return new BaseResponse<>(status);
+        }
+    }
+
+    /* 유저 정보 반환 API */
+    @ApiOperation("유저 정보 반환")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
+    })
+    @GetMapping("/info/{userIdx}")
+    public BaseResponse<User> getUser(@PathVariable int userIdx) {
+        try {
+            // 유효한 JWT인지 확인
+            int userIdxByJwt = jwtService.getUserIdx();  // JWT에서 userIdx 추출
+
+            if(userIdx != userIdxByJwt){
+                // userIdx와 접근한 유저가 같은지 확인
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            User user = userProvider.getUser(userIdx);
+            return new BaseResponse<>(user);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
         }
     }
 
