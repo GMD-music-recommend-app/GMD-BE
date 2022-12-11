@@ -72,5 +72,14 @@ public class UserService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    /* 내가 단 댓글 삭제 API */
+    public String deleteComment(int userIdx) throws BaseException{
+        try{
+            return userDao.deleteComment(userIdx);
+        } catch(Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
 

@@ -1,4 +1,4 @@
-package com.sesac.gmd.src.song.model;
+package com.sesac.gmd.src.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostCommentRes {
-    private int commentIdx;
-
+public class GetCommentReq {
+    private int userIdx;
 }

@@ -1,14 +1,13 @@
 package com.sesac.gmd.src.user;
 
-import com.sesac.gmd.src.user.model.PatchLocationReq;
-import com.sesac.gmd.src.user.model.PatchNicknameReq;
-import com.sesac.gmd.src.user.model.PostUserReq;
-import com.sesac.gmd.src.user.model.User;
+import com.sesac.gmd.src.song.model.GetPinsRes;
+import com.sesac.gmd.src.user.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Repository
 public class UserDao {
@@ -67,6 +66,36 @@ public class UserDao {
         this.jdbcTemplate.update(query, params);
 
         return "관심 지역이 성공적으로 변경되었습니다.";
+    }
+
+    /* 댓글 리스트 반환 API */
+    public List<GetCommentRes> getComment(int userIdx){
+        String query = "select pct.commentIdx, pct.content, pct.userIdx, pct.pinIdx, pt.title, pt.singer, pt.album, pt.state, pt.city, pt.street from pin_comment_tbl as pct left join pin_tbl as pt on pct.userIdx = pt.userIdx where pct.userIdx = ?";
+
+        return this.jdbcTemplate.query(query,
+                (rs, rowNum) -> new GetCommentRes(
+                        rs.getInt("commentIdx"),
+                        rs.getInt("pinIdx"),
+                        rs.getInt("userIdx"),
+                        rs.getString("album"),
+                        rs.getString("title"),
+                        rs.getString("singer"),
+                        rs.getString("content"),
+                        rs.getString("state"),
+                        rs.getString("city"),
+                        rs.getString("street")
+                ), userIdx);
+    }
+
+    /* 내가 단 댓글 삭제 API */
+    public String deleteComment(int userIdx){
+        String createBoardQuery = "delete from pin_comment_tbl where userIdx=?";
+        Object[] createBoardParams = new Object[]{
+                userIdx
+        };
+        this.jdbcTemplate.update(createBoardQuery, createBoardParams);
+
+        return "댓글이 성공적으로 삭제되었습니다.";
     }
 
     /** 유효성 검사 **/

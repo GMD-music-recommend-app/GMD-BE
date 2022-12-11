@@ -1,10 +1,14 @@
 package com.sesac.gmd.src.user;
 
 import com.sesac.gmd.config.BaseException;
+import com.sesac.gmd.src.user.model.GetCommentReq;
+import com.sesac.gmd.src.user.model.GetCommentRes;
 import com.sesac.gmd.src.user.model.User;
 import com.sesac.gmd.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.sesac.gmd.config.BaseResponseStatus.DATABASE_ERROR;
 
@@ -27,6 +31,15 @@ public class UserProvider {
         try {
             return userDao.getUser(userIdx);
         } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    /* 유저 댓글 반환 API */
+    public List<GetCommentRes> getComment(int userIdx) throws BaseException{
+        try{
+            return userDao.getComment(userIdx);
+        }catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
     }

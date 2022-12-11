@@ -169,16 +169,14 @@ public class SongController {
             @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
     })
     @ResponseBody
-    @PostMapping("/liking/{userIdx}")
-    public BaseResponse<PostLikeRes> likeSong(@PathVariable int userIdx, PostLikeReq postLikeReq){
+    @PostMapping("/liking/{userIdx}/{pinIdx}")
+    public BaseResponse<PostLikeRes> likeSong(PostLikeReq postLikeReq, @PathVariable int userIdx, @PathVariable int pinIdx){
         try{
             int userIdxJwt = jwtService.getUserIdx();
             //useridx로 접근한 유저가 같은 유저인지 확인하기
-            if(postLikeReq.getUserIdx() != userIdxJwt){
+            if(postLikeReq.getUserIdx() != userIdxJwt) {
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
             }
-            //핀 아이디 갖고오기
-            int pinIdx = postLikeReq.getPinIdx();
             //유저 아이디랑 핀 아이디 넘겨주기
             PostLikeRes postLikeRes = songService.likeSong(userIdx, pinIdx);
             return new BaseResponse<>(postLikeRes);
@@ -193,8 +191,8 @@ public class SongController {
             @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
     })
     @ResponseBody
-    @PostMapping("/comment/{userIdx}")
-    public BaseResponse<PostCommentRes> postComment(PostCommentReq postCommentReq, @PathVariable int userIdx){
+    @PostMapping("/comment/write")
+    public BaseResponse<PostCommentRes> postComment(@RequestBody PostCommentReq postCommentReq){
         try{
             int userIdxJwt = jwtService.getUserIdx();
             //useridx로 접근한 유저가 같은 유저인지 확인하기
@@ -204,9 +202,12 @@ public class SongController {
 
             //userid 같으면 댓글 생성
             int commentIdx = songService.postComment(postCommentReq);
-            return new BaseResponse<>(new PostCommentRes(userIdx, commentIdx));
+            return new BaseResponse<>(new PostCommentRes(commentIdx));
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+
+
 }
