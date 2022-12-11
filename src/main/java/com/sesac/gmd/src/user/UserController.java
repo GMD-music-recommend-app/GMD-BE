@@ -3,6 +3,7 @@ package com.sesac.gmd.src.user;
 import com.sesac.gmd.config.BaseException;
 import com.sesac.gmd.config.BaseResponse;
 import com.sesac.gmd.config.BaseResponseStatus;
+import com.sesac.gmd.src.user.model.GetCommentRes;
 import com.sesac.gmd.src.user.model.*;
 import com.sesac.gmd.utils.JwtService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -10,6 +11,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.sesac.gmd.config.BaseResponseStatus.*;
 import static com.sesac.gmd.utils.Validation.userValidation;
@@ -63,6 +66,7 @@ public class UserController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
     })
+    @ResponseBody
     @GetMapping("/info/{userIdx}")
     public BaseResponse<User> getUser(@PathVariable int userIdx) {
         try {
@@ -131,4 +135,53 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    /* 내가 단 댓글 반환 API */
+    @ApiOperation("내가 단 댓글 반환")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
+    })
+    @ResponseBody
+    @GetMapping("/comment/{userIdx}")
+    public BaseResponse<List<GetCommentRes>> getComment(@PathVariable int userIdx){
+        try{
+            // 유효한 JWT인지 확인
+            int userIdxByJwt = jwtService.getUserIdx();  // JWT에서 userIdx 추출
+
+            if(userIdx != userIdxByJwt){
+                // userIdx와 접근한 유저가 같은지 확인
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            List<GetCommentRes> getCommentRes = userProvider.getComment(userIdx);
+            return new BaseResponse<>(getCommentRes);
+
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /* 내가 단 댓글 삭제 API */
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
+    })
+    @ResponseBody
+    @DeleteMapping("/comment/delete/{userIdx}")
+    public BaseResponse<String> deleteComment(@PathVariable int userIdx){
+        try{
+            // 유효한 JWT인지 확인
+            int userIdxByJwt = jwtService.getUserIdx();  // JWT에서 userIdx 추출
+
+            if(userIdx != userIdxByJwt){
+                // userIdx와 접근한 유저가 같은지 확인
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            String result = userService.deleteComment(userIdx);
+            return new BaseResponse<>(result);
+
+
+        }catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
 }
