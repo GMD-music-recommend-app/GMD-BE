@@ -90,9 +90,15 @@ public class UserDao {
 
     /* 핀 삭제 API */
     public String deletePin(int pinIdx) {
-        String query = "update pin_tbl set status='I' where pinIdx=?";
+        String deleteQuery = "update pin_tbl set status='I' where pinIdx=?";
+        this.jdbcTemplate.update(deleteQuery, pinIdx);
 
-        this.jdbcTemplate.update(query, pinIdx);
+        String commentQuery = "update pin_comment_tbl set status='I' where pinIdx=?";
+        this.jdbcTemplate.update(commentQuery, pinIdx);
+
+        String likeQuery = "update pin_like_tbl set status='I' where pinIdx=?";
+        this.jdbcTemplate.update(likeQuery, pinIdx);
+
         return "성공적으로 삭제되었습니다";
     }
 
