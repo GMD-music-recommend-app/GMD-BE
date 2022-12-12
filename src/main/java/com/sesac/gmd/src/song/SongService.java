@@ -41,16 +41,6 @@ public class SongService {
             throw  new BaseException(DATABASE_ERROR);
         }
     }
-
-    /* 핀 삭제 API */
-    public String deletePin(int pinIdx) throws BaseException {
-        try {
-
-            return songDao.deletePin(pinIdx);
-        } catch(Exception exception) {
-            throw  new BaseException(DATABASE_ERROR);
-        }
-    }
     
     /* 핀 공감 & 공감 취소 API */
     public PostLikeRes likeSong(int useridx, int pinidx){
