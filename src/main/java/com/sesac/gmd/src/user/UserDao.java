@@ -71,7 +71,7 @@ public class UserDao {
     /* 내가 생성한 핀 리스트 반환 API */
     public List<GetMyPinsRes> getMyPins(int userIdx) {
         String query = "select pinIdx, userIdx, \n" +
-                "   title, singer, albumCover, \n" +
+                "   title, artist, albumImage, \n" +
                 "   state, city, street \n" +
                 "from pin_tbl \n" +
                 "   where userIdx=? and status='A'";
@@ -81,8 +81,8 @@ public class UserDao {
                         rs.getInt("pinIdx"),
                         rs.getInt("userIdx"),
                         rs.getString("title"),
-                        rs.getString("singer"),
-                        rs.getString("albumCover"),
+                        rs.getString("artist"),
+                        rs.getString("albumImage"),
                         rs.getString("state"),
                         rs.getString("city"),
                         rs.getString("street")

@@ -99,7 +99,7 @@ public class SongDao {
         String query = "select pinIdx,\n" +
                 "    ST_Distance_Sphere(POINT(?, ?), POINT(longitude, latitude)) as distance,\n" +
                 "    latitude, longitude, state, city, street, \n" +
-                "    albumCover \n" +
+                "    albumImage \n" +
                 "from pin_tbl \n" +
                 "    where ST_Distance_Sphere(POINT(?, ?), POINT(longitude, latitude)) <= ? and status='A'";
         Object[] params = new Object[]{
