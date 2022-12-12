@@ -1,6 +1,6 @@
 package com.sesac.gmd.src.user;
 
-import com.sesac.gmd.src.song.model.GetPinsRes;
+import com.sesac.gmd.src.user.model.GetMyPinsRes;
 import com.sesac.gmd.src.user.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -68,6 +68,35 @@ public class UserDao {
         return "관심 지역이 성공적으로 변경되었습니다.";
     }
 
+    /* 내가 생성한 핀 리스트 반환 API */
+    public List<GetMyPinsRes> getMyPins(int userIdx) {
+        String query = "select pinIdx, userIdx, \n" +
+                "   title, singer, albumCover, \n" +
+                "   state, city, street \n" +
+                "from pin_tbl \n" +
+                "   where userIdx=? and status='A'";
+
+        return this.jdbcTemplate.query(query,
+                (rs, rowNum) -> new GetMyPinsRes(
+                        rs.getInt("pinIdx"),
+                        rs.getInt("userIdx"),
+                        rs.getString("title"),
+                        rs.getString("singer"),
+                        rs.getString("albumCover"),
+                        rs.getString("state"),
+                        rs.getString("city"),
+                        rs.getString("street")
+                ), userIdx);
+    }
+
+    /* 핀 삭제 API */
+    public String deletePin(int pinIdx) {
+        String query = "update pin_tbl set status='I' where pinIdx=?";
+
+        this.jdbcTemplate.update(query, pinIdx);
+        return "성공적으로 삭제되었습니다";
+    }
+
     /* 댓글 리스트 반환 API */
     public List<GetCommentRes> getComment(int userIdx){
         String query = "select pct.commentIdx, pct.content, pct.userIdx, pct.pinIdx, pt.title, pt.singer, pt.album, pt.state, pt.city, pt.street from pin_comment_tbl as pct left join pin_tbl as pt on pct.userIdx = pt.userIdx where pct.userIdx = ?";
@@ -88,13 +117,10 @@ public class UserDao {
     }
 
     /* 내가 단 댓글 삭제 API */
-    public String deleteComment(int userIdx){
-        String createBoardQuery = "delete from pin_comment_tbl where userIdx=?";
-        Object[] createBoardParams = new Object[]{
-                userIdx
-        };
-        this.jdbcTemplate.update(createBoardQuery, createBoardParams);
+    public String deleteComment(int commentIdx){
+        String query = "update pin_comment_tbl set status='I' where commentIdx=?";
 
+        this.jdbcTemplate.update(query, commentIdx);
         return "댓글이 성공적으로 삭제되었습니다.";
     }
 

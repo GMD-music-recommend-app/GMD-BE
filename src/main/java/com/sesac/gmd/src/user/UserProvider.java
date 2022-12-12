@@ -1,7 +1,7 @@
 package com.sesac.gmd.src.user;
 
 import com.sesac.gmd.config.BaseException;
-import com.sesac.gmd.src.user.model.GetCommentReq;
+import com.sesac.gmd.src.user.model.GetMyPinsRes;
 import com.sesac.gmd.src.user.model.GetCommentRes;
 import com.sesac.gmd.src.user.model.User;
 import com.sesac.gmd.utils.JwtService;
@@ -32,6 +32,16 @@ public class UserProvider {
             return userDao.getUser(userIdx);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    /* 내가 생성한 핀 리스트 반환 API */
+    public List<GetMyPinsRes> getMyPins(int userIdx) throws BaseException {
+        try {
+            List<GetMyPinsRes> getMyPinsRes = userDao.getMyPins(userIdx);
+            return getMyPinsRes;
+        } catch(Exception exception) {
+            throw  new BaseException(DATABASE_ERROR);
         }
     }
 

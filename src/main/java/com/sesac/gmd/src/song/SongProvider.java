@@ -43,14 +43,6 @@ public class SongProvider {
         }
     }
 
-    public List<GetMyPinsRes> getMyPins(int userIdx) throws BaseException {
-        try {
-            List<GetMyPinsRes> getMyPinsRes = songDao.getMyPins(userIdx);
-            return getMyPinsRes;
-        } catch(Exception exception) {
-            throw  new BaseException(DATABASE_ERROR);
-        }
-    }
 
     /** 유효성 검사 **/
 

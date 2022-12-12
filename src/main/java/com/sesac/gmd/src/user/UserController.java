@@ -3,6 +3,8 @@ package com.sesac.gmd.src.user;
 import com.sesac.gmd.config.BaseException;
 import com.sesac.gmd.config.BaseResponse;
 import com.sesac.gmd.config.BaseResponseStatus;
+import com.sesac.gmd.src.user.model.DeletePinReq;
+import com.sesac.gmd.src.user.model.GetMyPinsRes;
 import com.sesac.gmd.src.user.model.GetCommentRes;
 import com.sesac.gmd.src.user.model.*;
 import com.sesac.gmd.utils.JwtService;
@@ -136,6 +138,50 @@ public class UserController {
         }
     }
 
+    /* 내가 생성한 핀 리스트 반환 API */
+    @ApiOperation("내가 생성한 핀 리스트 반환")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
+    })
+    @GetMapping("/pin/{userIdx}")
+    public BaseResponse<List<GetMyPinsRes>> getMyPins(@PathVariable int userIdx) {
+        try{
+            // 유효한 JWT인지 확인
+            int userIdxJwt = jwtService.getUserIdx();
+            //useridx로 접근한 유저가 같은 유저인지 확인하기
+            if(userIdx != userIdxJwt){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+
+            List<GetMyPinsRes> getMyPinsRes = userProvider.getMyPins(userIdx);
+            return new BaseResponse<>(getMyPinsRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /* 핀 삭제 API  */
+    @ApiOperation("핀 삭제")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
+    })
+    @PatchMapping("/pin/status/{pinIdx}")
+    public BaseResponse<String> deletePin(@PathVariable int pinIdx, @RequestBody DeletePinReq deletePinReq) {
+        try{
+            // 유효한 JWT인지 확인
+            int userIdxJwt = jwtService.getUserIdx();
+            //useridx로 접근한 유저가 같은 유저인지 확인하기
+            if(deletePinReq.getUserIdx() != userIdxJwt){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+
+            String result = userService.deletePin(pinIdx);
+            return new BaseResponse<>(result);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
     /* 내가 단 댓글 반환 API */
     @ApiOperation("내가 단 댓글 반환")
     @ApiImplicitParams({
@@ -165,20 +211,18 @@ public class UserController {
             @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
     })
     @ResponseBody
-    @DeleteMapping("/comment/delete/{userIdx}")
-    public BaseResponse<String> deleteComment(@PathVariable int userIdx){
+    @PatchMapping("/comment/status/{commentIdx}")
+    public BaseResponse<String> deleteComment(@PathVariable int commentIdx, @RequestBody DeletePinReq deleteCommentReq){
         try{
             // 유효한 JWT인지 확인
             int userIdxByJwt = jwtService.getUserIdx();  // JWT에서 userIdx 추출
 
-            if(userIdx != userIdxByJwt){
+            if(deleteCommentReq.getUserIdx() != userIdxByJwt){
                 // userIdx와 접근한 유저가 같은지 확인
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
-            String result = userService.deleteComment(userIdx);
+            String result = userService.deleteComment(commentIdx);
             return new BaseResponse<>(result);
-
-
         }catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }

@@ -118,50 +118,6 @@ public class SongController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
-
-    /* 내가 생성한 핀 리스트 반환 API */
-    @ApiOperation("내가 생성한 핀 리스트 반환")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
-    })
-    @GetMapping("/info/my-list/{userIdx}")
-    public BaseResponse<List<GetMyPinsRes>> getMyPins(@PathVariable int userIdx) {
-        try{
-            // 유효한 JWT인지 확인
-            int userIdxJwt = jwtService.getUserIdx();
-            //useridx로 접근한 유저가 같은 유저인지 확인하기
-            if(userIdx != userIdxJwt){
-                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
-            }
-
-            List<GetMyPinsRes> getMyPinsRes = songProvider.getMyPins(userIdx);
-            return new BaseResponse<>(getMyPinsRes);
-        } catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
-        }
-    }
-
-    /* 핀 삭제 API  */
-    @ApiOperation("핀 삭제")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
-    })
-    @PatchMapping("/status/{pinIdx}")
-    public BaseResponse<String> deletePin(@PathVariable int pinIdx, @RequestBody DeletePinReq deletePinReq) {
-        try{
-            // 유효한 JWT인지 확인
-            int userIdxJwt = jwtService.getUserIdx();
-            //useridx로 접근한 유저가 같은 유저인지 확인하기
-            if(deletePinReq.getUserIdx() != userIdxJwt){
-                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
-            }
-
-            String result = songService.deletePin(pinIdx);
-            return new BaseResponse<>(result);
-        } catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
-        }
-    }
     
     /* 핀 공감 & 공감 취소 API */
     @ApiOperation("핀 공감 & 공감 취소")
@@ -169,7 +125,7 @@ public class SongController {
             @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
     })
     @ResponseBody
-    @PostMapping("/liking/{userIdx}/{pinIdx}")
+    @PostMapping("/like/{userIdx}/{pinIdx}")
     public BaseResponse<PostLikeRes> likeSong(PostLikeReq postLikeReq, @PathVariable int userIdx, @PathVariable int pinIdx){
         try{
             int userIdxJwt = jwtService.getUserIdx();
