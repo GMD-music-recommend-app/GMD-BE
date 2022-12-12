@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,8 @@ public class SongDao {
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
+
+    /** API **/
 
     /* 핀 생성 API */
     public int createPin(PostPinReq postPinReq) {
@@ -160,4 +163,19 @@ public class SongDao {
         return this.jdbcTemplate.queryForObject(lastInsertIdx, int.class);
     }
 
+    /** 유효성 검사 **/
+
+    /* 노래 중복 검사 */
+    public int checkSong(double latitude, double longitude, int userIdx, int songIdx) {
+        DecimalFormat format = new DecimalFormat("0.000");
+
+        String query = "select exists(select * from pin_tbl " +
+                "           where userIdx=? and songIdx=?\n" +
+                "                and round(latitude, 3)=?\n" +
+                "                and round(longitude, 3)=?)";
+        Object[] params = new Object[] {
+                userIdx, songIdx, format.format(latitude), format.format(longitude) };
+
+        return this.jdbcTemplate.queryForObject(query, int.class, params);
+    }
 }

@@ -46,4 +46,12 @@ public class SongProvider {
 
     /** 유효성 검사 **/
 
+    /* 노래 중복 검사 */
+    public int checkSong(double latitude, double longitude, int userIdx, int songIdx) throws BaseException {
+        try {
+            return songDao.checkSong(latitude, longitude, userIdx, songIdx);
+        } catch(Exception exception) {
+            throw  new BaseException(DATABASE_ERROR);
+        }
+    }
 }
