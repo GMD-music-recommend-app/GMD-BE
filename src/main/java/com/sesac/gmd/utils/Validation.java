@@ -48,13 +48,13 @@ public class Validation {
         if(postPinReq.getTitle().isBlank()) {
             return POST_PINS_EMPTY_TITLE;
         }
-        if(postPinReq.getSinger().isBlank()) {
+        if(postPinReq.getArtist().isBlank()) {
             return POST_PINS_EMPTY_SINGER;
         }
-        if(postPinReq.getAlbum().isBlank()) {
+        if(postPinReq.getAlbumTitle().isBlank()) {
             return POST_PINS_EMPTY_ALBUM;
         }
-        if(postPinReq.getAlbumCover().isBlank()) {
+        if(postPinReq.getAlbumImage().isBlank()) {
             return POST_PINS_EMPTY_ALBUM_COVER;
         }
         if(postPinReq.getReason().isBlank()) {

@@ -24,8 +24,8 @@ public class SongDao {
         String query = "insert into pin_tbl values(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default, default, default)";
         Object[] params = new Object[] {
                 postPinReq.getUserIdx(), postPinReq.getSongIdx(),
-                postPinReq.getTitle(), postPinReq.getSinger(),
-                postPinReq.getAlbum(), postPinReq.getAlbumCover(),
+                postPinReq.getTitle(), postPinReq.getArtist(),
+                postPinReq.getAlbumTitle(), postPinReq.getAlbumImage(),
                 postPinReq.getReason(), postPinReq.getHashtag(),
                 postPinReq.getLatitude(), postPinReq.getLongitude(),
                 postPinReq.getState(), postPinReq.getCity(), postPinReq.getStreet() };
@@ -39,7 +39,7 @@ public class SongDao {
     /* 핀 반환 API */
     public Pin getPin(int userIdx, List<Comment> comments, int pinIdx) {
         String query = "select pin.pinIdx, pin.userIdx, user.nickname,\n" +
-                "       pin.songIdx, pin.title, pin.singer, pin.album, pin.albumCover,\n" +
+                "       pin.songIdx, pin.title, pin.artist, pin.albumTitle, pin.albumImage,\n" +
                 "       pin.reason, pin.hashtag,\n" +
                 "       exists(select * from pin_like_tbl where userIdx=?) as isLiked,\n" +
                 "       if(pin.userIdx=?, 1, 0) as isMade, \n" +
@@ -58,9 +58,9 @@ public class SongDao {
                     rs.getString("nickname"),
                     rs.getInt("songIdx"),
                     rs.getString("title"),
-                    rs.getString("singer"),
-                    rs.getString("album"),
-                    rs.getString("albumCover"),
+                    rs.getString("artist"),
+                    rs.getString("albumTitle"),
+                    rs.getString("albumImage"),
                     rs.getString("reason"),
                     rs.getString("hashtag"),
                     rs.getString("isLiked"),
@@ -117,7 +117,7 @@ public class SongDao {
                         rs.getString("state"),
                         rs.getString("city"),
                         rs.getString("street"),
-                        rs.getString("albumCover")
+                        rs.getString("albumImage")
                 ), params);
     }
 
