@@ -66,9 +66,6 @@ public class Validation {
         if(postPinReq.getCity().isBlank()) {
             return POST_PINS_EMPTY_CITY;
         }
-        if(postPinReq.getStreet().isBlank()) {
-            return POST_PINS_EMPTY_STREET;
-        }
 
         // 위도 경도 범위 검사 후 리턴
         return locationValidation(postPinReq.getLatitude(), postPinReq.getLongitude());

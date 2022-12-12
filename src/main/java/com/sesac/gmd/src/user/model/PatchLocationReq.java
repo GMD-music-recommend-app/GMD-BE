@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 public class PatchLocationReq {
     private String state;
     private String city;
-    private String street;
 }

@@ -12,6 +12,5 @@ public class GetPinsRes {
     private double longitude;
     private String state;
     private String city;
-    private String street;
     private String albumImage;
 }
