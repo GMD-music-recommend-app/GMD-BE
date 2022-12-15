@@ -13,9 +13,9 @@ public class Pin {
     private String nickname;
     private int songIdx;
     private String title;
-    private String singer;
-    private String album;
-    private String albumCover;
+    private String artist;
+    private String albumTitle;
+    private String albumImage;
     private String reason;
     private String hashtag;
     private String isLiked;
@@ -25,5 +25,4 @@ public class Pin {
     private double longitude;
     private String state;
     private String city;
-    private String street;
 }

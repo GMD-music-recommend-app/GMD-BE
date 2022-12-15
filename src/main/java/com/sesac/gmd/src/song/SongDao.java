@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -19,16 +20,18 @@ public class SongDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    /** API **/
+
     /* 핀 생성 API */
     public int createPin(PostPinReq postPinReq) {
-        String query = "insert into pin_tbl values(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default, default, default)";
+        String query = "insert into pin_tbl values(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default, default, default)";
         Object[] params = new Object[] {
                 postPinReq.getUserIdx(), postPinReq.getSongIdx(),
-                postPinReq.getTitle(), postPinReq.getSinger(),
-                postPinReq.getAlbum(), postPinReq.getAlbumCover(),
+                postPinReq.getTitle(), postPinReq.getArtist(),
+                postPinReq.getAlbumTitle(), postPinReq.getAlbumImage(),
                 postPinReq.getReason(), postPinReq.getHashtag(),
                 postPinReq.getLatitude(), postPinReq.getLongitude(),
-                postPinReq.getState(), postPinReq.getCity(), postPinReq.getStreet() };
+                postPinReq.getState(), postPinReq.getCity() };
 
         this.jdbcTemplate.update(query, params);
 
@@ -39,11 +42,11 @@ public class SongDao {
     /* 핀 반환 API */
     public Pin getPin(int userIdx, List<Comment> comments, int pinIdx) {
         String query = "select pin.pinIdx, pin.userIdx, user.nickname,\n" +
-                "       pin.songIdx, pin.title, pin.singer, pin.album, pin.albumCover,\n" +
+                "       pin.songIdx, pin.title, pin.artist, pin.albumTitle, pin.albumImage,\n" +
                 "       pin.reason, pin.hashtag,\n" +
                 "       exists(select * from pin_like_tbl where userIdx=?) as isLiked,\n" +
                 "       if(pin.userIdx=?, 1, 0) as isMade, \n" +
-                "       pin.latitude, pin.longitude, pin.state, pin.city, pin.street\n" +
+                "       pin.latitude, pin.longitude, pin.state, pin.city \n" +
                 "from pin_tbl as pin\n" +
             "        join user_tbl as user\n " +
                 "       on user.userIdx = pin.userIdx\n" +
@@ -58,9 +61,9 @@ public class SongDao {
                     rs.getString("nickname"),
                     rs.getInt("songIdx"),
                     rs.getString("title"),
-                    rs.getString("singer"),
-                    rs.getString("album"),
-                    rs.getString("albumCover"),
+                    rs.getString("artist"),
+                    rs.getString("albumTitle"),
+                    rs.getString("albumImage"),
                     rs.getString("reason"),
                     rs.getString("hashtag"),
                     rs.getString("isLiked"),
@@ -69,8 +72,7 @@ public class SongDao {
                     rs.getInt("latitude"),
                     rs.getInt("longitude"),
                     rs.getString("state"),
-                    rs.getString("city"),
-                    rs.getString("street")
+                    rs.getString("city")
                 ), params);
     }
 
@@ -98,8 +100,8 @@ public class SongDao {
     public List<GetPinsRes> getPins(GetPinsReq getPinsReq) {
         String query = "select pinIdx,\n" +
                 "    ST_Distance_Sphere(POINT(?, ?), POINT(longitude, latitude)) as distance,\n" +
-                "    latitude, longitude, state, city, street, \n" +
-                "    albumCover \n" +
+                "    latitude, longitude, state, city, \n" +
+                "    albumImage \n" +
                 "from pin_tbl \n" +
                 "    where ST_Distance_Sphere(POINT(?, ?), POINT(longitude, latitude)) <= ? and status='A'";
         Object[] params = new Object[]{
@@ -116,8 +118,7 @@ public class SongDao {
                         rs.getDouble("longitude"),
                         rs.getString("state"),
                         rs.getString("city"),
-                        rs.getString("street"),
-                        rs.getString("albumCover")
+                        rs.getString("albumImage")
                 ), params);
     }
 
@@ -162,4 +163,19 @@ public class SongDao {
         return this.jdbcTemplate.queryForObject(lastInsertIdx, int.class);
     }
 
+    /** 유효성 검사 **/
+
+    /* 노래 중복 검사 */
+    public int checkSong(double latitude, double longitude, int userIdx, int songIdx) {
+        DecimalFormat format = new DecimalFormat("0.000");
+
+        String query = "select exists(select * from pin_tbl " +
+                "           where userIdx=? and songIdx=?\n" +
+                "                and round(latitude, 3)=?\n" +
+                "                and round(longitude, 3)=?)";
+        Object[] params = new Object[] {
+                userIdx, songIdx, format.format(latitude), format.format(longitude) };
+
+        return this.jdbcTemplate.queryForObject(query, int.class, params);
+    }
 }

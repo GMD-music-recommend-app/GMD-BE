@@ -1,18 +1,16 @@
 package com.sesac.gmd.src.song;
 
 import com.sesac.gmd.config.BaseException;
-
+import com.sesac.gmd.config.BaseResponseStatus;
+import com.sesac.gmd.src.song.model.PostCommentReq;
+import com.sesac.gmd.src.song.model.PostLikeRes;
 import com.sesac.gmd.src.song.model.PostPinReq;
 import com.sesac.gmd.src.song.model.PostPinRes;
-import com.sesac.gmd.src.song.model.PostCommentReq;
-import com.sesac.gmd.src.song.model.PostLikeReq;
-import com.sesac.gmd.src.song.model.PostLikeRes;
 import com.sesac.gmd.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sesac.gmd.config.BaseResponseStatus;
-import static com.sesac.gmd.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.sesac.gmd.config.BaseResponseStatus.*;
 
 @Service
 public class SongService {
@@ -33,9 +31,12 @@ public class SongService {
 
     /* PIN 생성 API */
     public PostPinRes createPin(PostPinReq postPinReq) throws BaseException {
+        if(songProvider.checkSong(postPinReq.getLatitude(), postPinReq.getLongitude(), postPinReq.getUserIdx(), postPinReq.getSongIdx()) == 1) {
+            throw new BaseException(POST_PINS_EXISTS_SONG);
+        }
+
         try {
             int pinIdx = songDao.createPin(postPinReq);
-
             return new PostPinRes(pinIdx);
         } catch(Exception exception) {
             throw  new BaseException(DATABASE_ERROR);

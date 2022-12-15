@@ -11,15 +11,14 @@ public class PostPinReq {
     private int userIdx;
     private int songIdx;
     private String title;
-    private String singer;
-    private String album;
-    private String albumCover;
+    private String artist;
+    private String albumTitle;
+    private String albumImage;
     private String reason;
     private String hashtag;
     private double latitude;
     private double longitude;
     private String state;
     private String city;
-    private String street;
 }
 

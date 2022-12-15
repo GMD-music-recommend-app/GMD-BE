@@ -84,9 +84,27 @@ public class UserService {
     }
 
     /* 내가 단 댓글 삭제 API */
-    public String deleteComment(int commentIdx) throws BaseException{
+    public String deleteComment(int commentIdx) throws BaseException {
         try{
             return userDao.deleteComment(commentIdx);
+        } catch(Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    /* 푸시 알림 활성화 API */
+    public String activeIsPushed(int userIdx) throws BaseException {
+        try {
+            return userDao.activeIsPushed(userIdx);
+        } catch(Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    /* 푸시 알림 비활성화 API */
+    public String patchIsPushed(int userIdx) throws BaseException {
+        try {
+            return userDao.patchIsPushed(userIdx);
         } catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
