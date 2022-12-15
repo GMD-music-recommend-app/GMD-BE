@@ -136,6 +136,14 @@ public class UserDao {
         return "푸시 알림이 활성화되었습니다.";
     }
 
+    /* 푸시 알림 비활성화 API */
+    public String patchIsPushed(int userIdx) {
+        String query = "update user_tbl set isPushed='I' where userIdx=? and isPushed='A'";
+
+        this.jdbcTemplate.update(query, userIdx);
+        return "푸시 알림이 비활성화되었습니다.";
+    }
+
     /** 유효성 검사 **/
 
     /* 중복 이메일 검사 */

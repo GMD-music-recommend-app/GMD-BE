@@ -100,5 +100,14 @@ public class UserService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    /* 푸시 알림 비활성화 API */
+    public String patchIsPushed(int userIdx) throws BaseException {
+        try {
+            return userDao.patchIsPushed(userIdx);
+        } catch(Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
 

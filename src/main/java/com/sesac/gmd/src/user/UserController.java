@@ -230,7 +230,7 @@ public class UserController {
     }
 
     /* 푸시 알림 활성화 API */
-    @ApiOperation("푸시 알림 동의 여부 활성화")
+    @ApiOperation("푸시 알림 활성화")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
     })
@@ -253,4 +253,27 @@ public class UserController {
         }
     }
 
+    /* 푸시 알림 비활성화 API */
+    @ApiOperation("푸시 알림 비활성화")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
+    })
+    @ResponseBody
+    @PatchMapping("/push/status/{userIdx}")
+    public BaseResponse<String> patchIsPushed(@PathVariable int userIdx) {
+        try{
+            // 유효한 JWT인지 확인
+            int userIdxByJwt = jwtService.getUserIdx();  // JWT에서 userIdx 추출
+
+            if(userIdx != userIdxByJwt){
+                // userIdx와 접근한 유저가 같은지 확인
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            String result = userService.patchIsPushed(userIdx);
+            return new BaseResponse<>(result);
+        }catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 }
