@@ -121,11 +121,19 @@ public class UserDao {
     }
 
     /* 내가 단 댓글 삭제 API */
-    public String deleteComment(int commentIdx){
+    public String deleteComment(int commentIdx) {
         String query = "update pin_comment_tbl set status='I' where commentIdx=?";
 
         this.jdbcTemplate.update(query, commentIdx);
         return "댓글이 성공적으로 삭제되었습니다.";
+    }
+
+    /* 푸시 알림 활성화 API */
+    public String activeIsPushed(int userIdx) {
+        String query = "update user_tbl set isPushed='A' where userIdx=? and isPushed='I'";
+
+        this.jdbcTemplate.update(query, userIdx);
+        return "푸시 알림이 활성화되었습니다.";
     }
 
     /** 유효성 검사 **/
