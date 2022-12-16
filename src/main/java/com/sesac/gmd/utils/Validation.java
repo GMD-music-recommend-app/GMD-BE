@@ -2,6 +2,7 @@ package com.sesac.gmd.utils;
 
 import com.sesac.gmd.config.BaseResponseStatus;
 import com.sesac.gmd.src.song.model.PostPinReq;
+import com.sesac.gmd.src.user.model.GetCommentReq;
 import com.sesac.gmd.src.user.model.PostUserReq;
 
 import java.util.Objects;
@@ -85,4 +86,7 @@ public class Validation {
 
         return SUCCESS;
     }
+
+
+
 }

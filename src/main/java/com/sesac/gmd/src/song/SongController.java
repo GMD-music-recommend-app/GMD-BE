@@ -125,7 +125,7 @@ public class SongController {
             @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
     })
     @ResponseBody
-    @PostMapping("/liking/{userIdx}/{pinIdx}")
+    @PostMapping("/like/{userIdx}/{pinIdx}")
     public BaseResponse<PostLikeRes> likeSong(PostLikeReq postLikeReq, @PathVariable int userIdx, @PathVariable int pinIdx){
         try{
             int userIdxJwt = jwtService.getUserIdx();
