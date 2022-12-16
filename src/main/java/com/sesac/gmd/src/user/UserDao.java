@@ -71,7 +71,7 @@ public class UserDao {
     /* 내가 생성한 핀 리스트 반환 API */
     public List<GetMyPinsRes> getMyPins(int userIdx) {
         String query = "select pinIdx, userIdx, \n" +
-                "   title, artist, albumImage, \n" +
+                "   songTitle, artist, albumImage, \n" +
                 "   state, city \n" +
                 "from pin_tbl \n" +
                 "   where userIdx=? and status='A'";
@@ -80,7 +80,7 @@ public class UserDao {
                 (rs, rowNum) -> new GetMyPinsRes(
                         rs.getInt("pinIdx"),
                         rs.getInt("userIdx"),
-                        rs.getString("title"),
+                        rs.getString("songTitle"),
                         rs.getString("artist"),
                         rs.getString("albumImage"),
                         rs.getString("state"),
@@ -104,7 +104,7 @@ public class UserDao {
 
     /* 댓글 리스트 반환 API */
     public List<GetCommentRes> getComment(int userIdx){
-        String query = "select pct.commentIdx, pct.content, pct.userIdx, pct.pinIdx, pt.title, pt.singer, pt.album, pt.state, pt.city from pin_comment_tbl as pct left join pin_tbl as pt on pct.userIdx = pt.userIdx where pct.userIdx = ?";
+        String query = "select pct.commentIdx, pct.content, pct.userIdx, pct.pinIdx, pt.songTitle, pt.singer, pt.album, pt.state, pt.city from pin_comment_tbl as pct left join pin_tbl as pt on pct.userIdx = pt.userIdx where pct.userIdx = ?";
 
         return this.jdbcTemplate.query(query,
                 (rs, rowNum) -> new GetCommentRes(
@@ -112,7 +112,7 @@ public class UserDao {
                         rs.getInt("pinIdx"),
                         rs.getInt("userIdx"),
                         rs.getString("album"),
-                        rs.getString("title"),
+                        rs.getString("songTitle"),
                         rs.getString("singer"),
                         rs.getString("content"),
                         rs.getString("state"),

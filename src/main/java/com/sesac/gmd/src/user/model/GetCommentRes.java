@@ -16,7 +16,7 @@ public class GetCommentRes {
     private int pinIdx;
     private int userIdx;
     private String singer;
-    private String title;
+    private String songTitle;
     private String album;
     private String content;
     private String state;

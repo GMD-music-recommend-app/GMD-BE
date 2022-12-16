@@ -12,7 +12,7 @@ public class Pin {
     private int userIdx;
     private String nickname;
     private int songIdx;
-    private String title;
+    private String songTitle;
     private String artist;
     private String albumTitle;
     private String albumImage;

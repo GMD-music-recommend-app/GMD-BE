@@ -27,7 +27,7 @@ public class SongDao {
         String query = "insert into pin_tbl values(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default, default, default)";
         Object[] params = new Object[] {
                 postPinReq.getUserIdx(), postPinReq.getSongIdx(),
-                postPinReq.getTitle(), postPinReq.getArtist(),
+                postPinReq.getSongTitle(), postPinReq.getArtist(),
                 postPinReq.getAlbumTitle(), postPinReq.getAlbumImage(),
                 postPinReq.getReason(), postPinReq.getHashtag(),
                 postPinReq.getLatitude(), postPinReq.getLongitude(),
@@ -42,7 +42,7 @@ public class SongDao {
     /* 핀 반환 API */
     public Pin getPin(int userIdx, List<Comment> comments, int pinIdx) {
         String query = "select pin.pinIdx, pin.userIdx, user.nickname,\n" +
-                "       pin.songIdx, pin.title, pin.artist, pin.albumTitle, pin.albumImage,\n" +
+                "       pin.songIdx, pin.songTitle, pin.artist, pin.albumTitle, pin.albumImage,\n" +
                 "       pin.reason, pin.hashtag,\n" +
                 "       exists(select * from pin_like_tbl where userIdx=?) as isLiked,\n" +
                 "       if(pin.userIdx=?, 1, 0) as isMade, \n" +
@@ -60,7 +60,7 @@ public class SongDao {
                     rs.getInt("userIdx"),
                     rs.getString("nickname"),
                     rs.getInt("songIdx"),
-                    rs.getString("title"),
+                    rs.getString("songTitle"),
                     rs.getString("artist"),
                     rs.getString("albumTitle"),
                     rs.getString("albumImage"),
