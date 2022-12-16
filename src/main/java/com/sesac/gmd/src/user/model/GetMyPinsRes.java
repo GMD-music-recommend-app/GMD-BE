@@ -10,9 +10,10 @@ import lombok.NoArgsConstructor;
 public class GetMyPinsRes {
     private int pinIdx;
     private int userIdx;
-    private String title;
+    private String songTitle;
     private String artist;
     private String albumImage;
     private String state;
     private String city;
+    private String street;
 }

@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class User {
     private int userIdx;
     private String nickname;
+    private String isPushed;
 }

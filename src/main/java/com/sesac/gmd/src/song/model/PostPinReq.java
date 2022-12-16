@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class PostPinReq {
     private int userIdx;
     private int songIdx;
-    private String title;
+    private String songTitle;
     private String artist;
     private String albumTitle;
     private String albumImage;
@@ -20,5 +20,6 @@ public class PostPinReq {
     private double longitude;
     private String state;
     private String city;
+    private String street;
 }
 
