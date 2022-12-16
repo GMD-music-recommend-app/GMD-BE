@@ -15,4 +15,5 @@ public class GetMyPinsRes {
     private String albumImage;
     private String state;
     private String city;
+    private String street;
 }

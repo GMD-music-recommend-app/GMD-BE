@@ -20,5 +20,6 @@ public class PostPinReq {
     private double longitude;
     private String state;
     private String city;
+    private String street;
 }
 

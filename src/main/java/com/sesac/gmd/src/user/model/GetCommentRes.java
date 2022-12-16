@@ -21,4 +21,5 @@ public class GetCommentRes {
     private String content;
     private String state;
     private String city;
+    private String street;
 }

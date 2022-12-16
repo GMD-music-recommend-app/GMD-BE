@@ -58,9 +58,9 @@ public class UserDao {
 
     /* 관심 지역 변경 API */
     public String patchLocation(PatchLocationReq patchLocationReq, int userIdx) {
-        String query = "update user_tbl set state=?, city=? where userIdx=?";
+        String query = "update user_tbl set state=?, city=?, street=? where userIdx=?";
         Object[] params = new Object[] {
-                patchLocationReq.getState(), patchLocationReq.getCity(),
+                patchLocationReq.getState(), patchLocationReq.getCity(), patchLocationReq.getStreet(),
                 userIdx };
 
         this.jdbcTemplate.update(query, params);
@@ -72,7 +72,7 @@ public class UserDao {
     public List<GetMyPinsRes> getMyPins(int userIdx) {
         String query = "select pinIdx, userIdx, \n" +
                 "   songTitle, artist, albumImage, \n" +
-                "   state, city \n" +
+                "   state, city, street \n" +
                 "from pin_tbl \n" +
                 "   where userIdx=? and status='A'";
 
@@ -84,7 +84,8 @@ public class UserDao {
                         rs.getString("artist"),
                         rs.getString("albumImage"),
                         rs.getString("state"),
-                        rs.getString("city")
+                        rs.getString("city"),
+                        rs.getString("street")
                 ), userIdx);
     }
 
@@ -104,7 +105,7 @@ public class UserDao {
 
     /* 댓글 리스트 반환 API */
     public List<GetCommentRes> getComment(int userIdx){
-        String query = "select pct.commentIdx, pct.content, pct.userIdx, pct.pinIdx, pt.songTitle, pt.singer, pt.album, pt.state, pt.city from pin_comment_tbl as pct left join pin_tbl as pt on pct.userIdx = pt.userIdx where pct.userIdx = ?";
+        String query = "select pct.commentIdx, pct.content, pct.userIdx, pct.pinIdx, pt.songTitle, pt.singer, pt.album, pt.state, pt.city, pt.street from pin_comment_tbl as pct left join pin_tbl as pt on pct.userIdx = pt.userIdx where pct.userIdx = ?";
 
         return this.jdbcTemplate.query(query,
                 (rs, rowNum) -> new GetCommentRes(
@@ -116,7 +117,8 @@ public class UserDao {
                         rs.getString("singer"),
                         rs.getString("content"),
                         rs.getString("state"),
-                        rs.getString("city")
+                        rs.getString("city"),
+                        rs.getString("street")
                 ), userIdx);
     }
 
