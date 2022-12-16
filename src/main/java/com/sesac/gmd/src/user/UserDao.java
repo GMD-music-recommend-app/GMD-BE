@@ -36,12 +36,13 @@ public class UserDao {
 
     /* 유저 정보 반환 API */
     public User getUser(int userIdx) {
-        String query = "select userIdx, nickname from user_tbl where userIdx=?";
+        String query = "select userIdx, nickname, isPushed from user_tbl where userIdx=?";
 
         return this.jdbcTemplate.queryForObject(query,
                 (rs, rowNum) -> new User(
                         rs.getInt("userIdx"),
-                        rs.getString("nickname")
+                        rs.getString("nickname"),
+                        rs.getString("isPushed")
                 ), userIdx);
     }
 
