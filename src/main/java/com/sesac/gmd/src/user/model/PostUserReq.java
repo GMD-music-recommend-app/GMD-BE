@@ -14,5 +14,5 @@ public class PostUserReq {
     private String city;
     private String street;
     private String pushId;
-    private String oauthId;
+    private String accessToken;
 }
