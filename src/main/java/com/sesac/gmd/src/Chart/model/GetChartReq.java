@@ -10,6 +10,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetChartReq {
-    private double latitude;
-    private double longitude;
+    private String city;
 }
