@@ -10,8 +10,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetChartRes {
+    //핀 인덱스, 순위, 앨범 커버, 제목, 가수, 공감 수
     private int pinIdx;
-    private String albumCover;
-    private String title;
-    private String singer;
+    private int songRank;
+    private String albumImage;
+    private String songTitle;
+    private String artist;
+    private String city;
+    private String state;
+    private int likeCount;
 }

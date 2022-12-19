@@ -106,16 +106,18 @@ public class UserDao {
 
     /* 댓글 리스트 반환 API */
     public List<GetCommentRes> getComment(int userIdx){
-        String query = "select pct.commentIdx, pct.content, pct.userIdx, pct.pinIdx, pt.songTitle, pt.singer, pt.album, pt.state, pt.city, pt.street from pin_comment_tbl as pct left join pin_tbl as pt on pct.userIdx = pt.userIdx where pct.userIdx = ?";
+        String query = "select pct.commentIdx, pct.pinIdx, pct.userIdx, pt.artist, pt.songTitle, pt.albumTitle, pct.content, pt.state, pt.city, pt.street \n" +
+                "from pin_comment_tbl as pct left join pin_tbl as pt on pct.pinIdx = pt.pinIdx\n"+
+                "where pct.userIdx = ? GROUP BY pt.title;";
 
         return this.jdbcTemplate.query(query,
                 (rs, rowNum) -> new GetCommentRes(
                         rs.getInt("commentIdx"),
                         rs.getInt("pinIdx"),
                         rs.getInt("userIdx"),
-                        rs.getString("album"),
+                        rs.getString("artist"),
                         rs.getString("songTitle"),
-                        rs.getString("singer"),
+                        rs.getString("albumTitle"),
                         rs.getString("content"),
                         rs.getString("state"),
                         rs.getString("city"),
