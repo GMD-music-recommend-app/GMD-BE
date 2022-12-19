@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -37,9 +38,19 @@ public class UserController {
         this.jwtService = jwtService;
     }
 
-    /* 회원가입 API (카카오 제외) */
-    @ApiOperation("임시 회원가입")
-    @PostMapping("/sign-up")
+    /* 카카오 로그인 (프론트가 없는 경우) */
+    @ApiIgnore
+    @ResponseBody
+    @GetMapping("/kakao")
+    public void kakaoCallback(@RequestParam String code) {
+        // 코드를 통해 Access Token을 받아옴
+        String token = userService.getKaKaoAccessToken(code);
+        userService.createKakaoUser(token);
+    }
+
+    /* 회원가입 API */
+    @ApiOperation("회원 가입")
+    @PostMapping("/sign-up/kakao")
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
         // NULL 값 체크
         BaseResponseStatus status = userValidation(postUserReq);
@@ -48,6 +59,12 @@ public class UserController {
             // 형식 체크 : 이메일 형식 체크
             if(!isRegexEmail(postUserReq.getEmail())) {
                 return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+            }
+
+            // 카카오 이메일 비교
+            String kakaoEmail = userService.createKakaoUser(postUserReq.getAccessToken());
+            if(!kakaoEmail.equals(postUserReq.getEmail())) {
+                return new BaseResponse<>(POST_USERS_NO_EXISTS_EMAIL);
             }
 
             try {
