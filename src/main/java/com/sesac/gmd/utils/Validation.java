@@ -28,7 +28,7 @@ public class Validation {
             return POST_USERS_EMPTY_PUSH;
         }
         if(postUserReq.getAccessToken().isBlank()) {
-            return POST_USERS_EMPTY_OAUTH;
+            return POST_USERS_EMPTY_ACCESS_TOKEN;
         }
 
         // 성별을 제대로 적었는지 확인

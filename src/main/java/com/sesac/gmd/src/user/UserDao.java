@@ -22,11 +22,11 @@ public class UserDao {
 
     /* 회원 가입 API */
     public int createUser(PostUserReq postUserReq) {
-        String query = "insert into user_tbl values(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, default, default, default, default)";
+        String query = "insert into user_tbl values(null, ?, ?, ?, ?, ?, ?, ?, ?, default, default, default, default)";
         Object[] params = new Object[] {
                 postUserReq.getNickname(), postUserReq.getGender(), postUserReq.getAge(), postUserReq.getEmail(),
                 postUserReq.getState(), postUserReq.getCity(), postUserReq.getStreet(),
-                postUserReq.getPushId(), postUserReq.getAccessToken() };
+                postUserReq.getPushId() };
 
         this.jdbcTemplate.update(query, params);
 
