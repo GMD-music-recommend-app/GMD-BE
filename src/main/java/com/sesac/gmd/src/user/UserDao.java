@@ -26,7 +26,7 @@ public class UserDao {
         Object[] params = new Object[] {
                 postUserReq.getNickname(), postUserReq.getGender(), postUserReq.getAge(), postUserReq.getEmail(),
                 postUserReq.getState(), postUserReq.getCity(), postUserReq.getStreet(),
-                postUserReq.getPushId(), postUserReq.getOauthId() };
+                postUserReq.getPushId(), postUserReq.getAccessToken() };
 
         this.jdbcTemplate.update(query, params);
 
