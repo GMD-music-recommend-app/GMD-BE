@@ -1,4 +1,4 @@
-package com.sesac.gmd.src.user.model;
+package com.sesac.gmd.src.Chart.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetCommentReq {
-    private int userIdx;
+public class GetChartReq {
+    private String city;
 }

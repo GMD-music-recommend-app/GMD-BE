@@ -27,7 +27,7 @@ public class Validation {
         if(postUserReq.getPushId().isBlank()) {
             return POST_USERS_EMPTY_PUSH;
         }
-        if(postUserReq.getOauthId().isBlank()) {
+        if(postUserReq.getAccessToken().isBlank()) {
             return POST_USERS_EMPTY_OAUTH;
         }
 
@@ -85,4 +85,7 @@ public class Validation {
 
         return SUCCESS;
     }
+
+
+
 }
