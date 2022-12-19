@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class DeletePinReq {
     private int userIdx;
-    private String nickname;
-    private String isPushed;
 }

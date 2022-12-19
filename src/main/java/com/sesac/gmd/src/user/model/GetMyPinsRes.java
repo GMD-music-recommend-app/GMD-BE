@@ -1,4 +1,4 @@
-package com.sesac.gmd.src.song.model;
+package com.sesac.gmd.src.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,19 +7,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostPinReq {
+public class GetMyPinsRes {
+    private int pinIdx;
     private int userIdx;
-    private int songIdx;
     private String songTitle;
     private String artist;
-    private String albumTitle;
     private String albumImage;
-    private String reason;
-    private String hashtag;
-    private double latitude;
-    private double longitude;
     private String state;
     private String city;
     private String street;
 }
-

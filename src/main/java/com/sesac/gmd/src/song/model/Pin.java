@@ -12,10 +12,10 @@ public class Pin {
     private int userIdx;
     private String nickname;
     private int songIdx;
-    private String title;
-    private String singer;
-    private String album;
-    private String albumCover;
+    private String songTitle;
+    private String artist;
+    private String albumTitle;
+    private String albumImage;
     private String reason;
     private String hashtag;
     private String isLiked;

@@ -50,6 +50,7 @@ public enum BaseResponseStatus {
     POST_PINS_EMPTY_STREET(false, 2048, "구를 입력해주세요."),
     POST_PINS_INVALID_LATITUDE(false, 2050, "위도 범위를 확인해주세요."),
     POST_PINS_INVALID_LONGITUDE(false, 2051, "경도 범위를 확인해주세요."),
+    POST_PINS_EXISTS_SONG(false, 2060, "중복된 곡입니다."),
 
     /**
      * 3000 : Response 오류

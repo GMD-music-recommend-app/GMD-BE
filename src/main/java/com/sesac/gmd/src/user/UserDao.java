@@ -1,6 +1,6 @@
 package com.sesac.gmd.src.user;
 
-import com.sesac.gmd.src.song.model.GetPinsRes;
+import com.sesac.gmd.src.user.model.GetMyPinsRes;
 import com.sesac.gmd.src.user.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,7 +22,7 @@ public class UserDao {
 
     /* 회원 가입 API */
     public int createUser(PostUserReq postUserReq) {
-        String query = "insert into user_tbl values(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, default, default, default)";
+        String query = "insert into user_tbl values(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, default, default, default, default)";
         Object[] params = new Object[] {
                 postUserReq.getNickname(), postUserReq.getGender(), postUserReq.getAge(), postUserReq.getEmail(),
                 postUserReq.getState(), postUserReq.getCity(), postUserReq.getStreet(),
@@ -36,12 +36,13 @@ public class UserDao {
 
     /* 유저 정보 반환 API */
     public User getUser(int userIdx) {
-        String query = "select userIdx, nickname from user_tbl where userIdx=?";
+        String query = "select userIdx, nickname, isPushed from user_tbl where userIdx=?";
 
         return this.jdbcTemplate.queryForObject(query,
                 (rs, rowNum) -> new User(
                         rs.getInt("userIdx"),
-                        rs.getString("nickname")
+                        rs.getString("nickname"),
+                        rs.getString("isPushed")
                 ), userIdx);
     }
 
@@ -68,9 +69,44 @@ public class UserDao {
         return "관심 지역이 성공적으로 변경되었습니다.";
     }
 
+    /* 내가 생성한 핀 리스트 반환 API */
+    public List<GetMyPinsRes> getMyPins(int userIdx) {
+        String query = "select pinIdx, userIdx, \n" +
+                "   songTitle, artist, albumImage, \n" +
+                "   state, city, street \n" +
+                "from pin_tbl \n" +
+                "   where userIdx=? and status='A'";
+
+        return this.jdbcTemplate.query(query,
+                (rs, rowNum) -> new GetMyPinsRes(
+                        rs.getInt("pinIdx"),
+                        rs.getInt("userIdx"),
+                        rs.getString("songTitle"),
+                        rs.getString("artist"),
+                        rs.getString("albumImage"),
+                        rs.getString("state"),
+                        rs.getString("city"),
+                        rs.getString("street")
+                ), userIdx);
+    }
+
+    /* 핀 삭제 API */
+    public String deletePin(int pinIdx) {
+        String deleteQuery = "update pin_tbl set status='I' where pinIdx=?";
+        this.jdbcTemplate.update(deleteQuery, pinIdx);
+
+        String commentQuery = "update pin_comment_tbl set status='I' where pinIdx=?";
+        this.jdbcTemplate.update(commentQuery, pinIdx);
+
+        String likeQuery = "update pin_like_tbl set status='I' where pinIdx=?";
+        this.jdbcTemplate.update(likeQuery, pinIdx);
+
+        return "성공적으로 삭제되었습니다";
+    }
+
     /* 댓글 리스트 반환 API */
     public List<GetCommentRes> getComment(int userIdx){
-        String query = "select pct.commentIdx, pct.content, pct.userIdx, pct.pinIdx, pt.title, pt.artist, pt.albumTitle, pt.state, pt.city\n" +
+        String query = "select pct.commentIdx, pct.content, pct.userIdx, pct.pinIdx, pt.songTitle, pt.artist, pt.albumTitle, pt.state, pt.city\n" +
                 "from pin_comment_tbl as pct left join pin_tbl as pt on pct.userIdx = pt.userIdx\n"+
                 "where pct.userIdx = ? GROUP BY pt.title;";
 
@@ -80,7 +116,7 @@ public class UserDao {
                         rs.getInt("pinIdx"),
                         rs.getInt("userIdx"),
                         rs.getString("albumTitle"),
-                        rs.getString("title"),
+                        rs.getString("songTitle"),
                         rs.getString("artist"),
                         rs.getString("content"),
                         rs.getString("state"),
@@ -89,14 +125,27 @@ public class UserDao {
     }
 
     /* 내가 단 댓글 삭제 API */
-    public String deleteComment(int userIdx){
-        String createBoardQuery = "delete from pin_comment_tbl where userIdx=?";
-        Object[] createBoardParams = new Object[]{
-                userIdx
-        };
-        this.jdbcTemplate.update(createBoardQuery, createBoardParams);
+    public String deleteComment(int commentIdx) {
+        String query = "update pin_comment_tbl set status='I' where commentIdx=?";
 
+        this.jdbcTemplate.update(query, commentIdx);
         return "댓글이 성공적으로 삭제되었습니다.";
+    }
+
+    /* 푸시 알림 활성화 API */
+    public String activeIsPushed(int userIdx) {
+        String query = "update user_tbl set isPushed='A' where userIdx=? and isPushed='I'";
+
+        this.jdbcTemplate.update(query, userIdx);
+        return "푸시 알림이 활성화되었습니다.";
+    }
+
+    /* 푸시 알림 비활성화 API */
+    public String patchIsPushed(int userIdx) {
+        String query = "update user_tbl set isPushed='I' where userIdx=? and isPushed='A'";
+
+        this.jdbcTemplate.update(query, userIdx);
+        return "푸시 알림이 비활성화되었습니다.";
     }
 
     /** 유효성 검사 **/

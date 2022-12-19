@@ -4,17 +4,12 @@ import com.sesac.gmd.config.BaseException;
 import com.sesac.gmd.config.BaseResponse;
 import com.sesac.gmd.config.BaseResponseStatus;
 import com.sesac.gmd.src.song.model.*;
-import com.sesac.gmd.src.user.model.UserRes;
 import com.sesac.gmd.utils.JwtService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.v3.oas.annotations.headers.Header;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.List;
 
@@ -117,7 +112,7 @@ public class SongController {
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
-    }    
+    }
     
     /* 핀 공감 & 공감 취소 API */
     @ApiOperation("핀 공감 & 공감 취소")

@@ -46,16 +46,16 @@ public class Validation {
     /* PIN 생성 시 비어있는 값이 있는지 확인 */
     public static BaseResponseStatus pinValidation(PostPinReq postPinReq) {
         // 빈 값 확인
-        if(postPinReq.getTitle().isBlank()) {
+        if(postPinReq.getSongTitle().isBlank()) {
             return POST_PINS_EMPTY_TITLE;
         }
-        if(postPinReq.getSinger().isBlank()) {
+        if(postPinReq.getArtist().isBlank()) {
             return POST_PINS_EMPTY_SINGER;
         }
-        if(postPinReq.getAlbum().isBlank()) {
+        if(postPinReq.getAlbumTitle().isBlank()) {
             return POST_PINS_EMPTY_ALBUM;
         }
-        if(postPinReq.getAlbumCover().isBlank()) {
+        if(postPinReq.getAlbumImage().isBlank()) {
             return POST_PINS_EMPTY_ALBUM_COVER;
         }
         if(postPinReq.getReason().isBlank()) {
