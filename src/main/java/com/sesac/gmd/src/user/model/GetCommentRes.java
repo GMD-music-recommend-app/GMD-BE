@@ -15,11 +15,10 @@ public class GetCommentRes {
     private int commentIdx;
     private int pinIdx;
     private int userIdx;
-    private String singer;
-    private String songTitle;
-    private String album;
+    private String artist;
+    private String title;
+    private String albumTitle;
     private String content;
     private String state;
     private String city;
-    private String street;
 }

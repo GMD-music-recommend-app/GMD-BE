@@ -207,7 +207,7 @@ public class UserController {
     }
 
     /* 내가 단 댓글 삭제 API */
-    @ApiOperation("댓글 삭제")
+    @ApiOperation("내가 단 댓글 삭제")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
     })
