@@ -61,11 +61,11 @@ public class UserController {
                 return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
             }
 
-            // 카카오 이메일 비교
-            String kakaoEmail = userService.createKakaoUser(postUserReq.getAccessToken());
-            if(!kakaoEmail.equals(postUserReq.getEmail())) {
-                return new BaseResponse<>(POST_USERS_NO_EXISTS_EMAIL);
-            }
+//            // 카카오 이메일 비교
+//            String kakaoEmail = userService.createKakaoUser(postUserReq.getAccessToken());
+//            if(!kakaoEmail.equals(postUserReq.getEmail())) {
+//                return new BaseResponse<>(POST_USERS_NO_EXISTS_EMAIL);
+//            }
 
             try {
                 PostUserRes postUserRes = userService.createUser(postUserReq);
