@@ -41,9 +41,9 @@ public class SongService {
     }
     
     /* 핀 공감 & 공감 취소 API */
-    public String likeSong(int userIdx, int pinIdx) throws BaseException{
+    public String likeSong(PostLikeReq postLikeReq) throws BaseException{
         try{
-            return songDao.likeSong(userIdx, pinIdx);
+            return songDao.likeSong(postLikeReq);
         }catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }

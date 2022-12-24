@@ -120,16 +120,16 @@ public class SongController {
             @ApiImplicitParam(name = "X-ACCESS-TOKEN", required = true, dataType = "string", paramType = "header"),
     })
     @ResponseBody
-    @PostMapping("/like/{userIdx}/{pinIdx}")
-    public BaseResponse<String> likeSong(@PathVariable int userIdx, @PathVariable int pinIdx){
+    @PostMapping("/like")
+    public BaseResponse<String> likeSong(@RequestBody PostLikeReq postLikeReq){
         try{
             int userIdxJwt = jwtService.getUserIdx();
             //useridx로 접근한 유저가 같은 유저인지 확인하기
-            if(userIdx != userIdxJwt) {
+            if(postLikeReq.getUserIdx() != userIdxJwt) {
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
             }
             //유저 아이디랑 핀 아이디 넘겨주기
-            String result = songService.likeSong(userIdx, pinIdx);
+            String result = songService.likeSong(postLikeReq);
             return new BaseResponse<>(result);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
