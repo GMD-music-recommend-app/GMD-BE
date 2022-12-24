@@ -44,8 +44,12 @@ public class SongService {
     }
     
     /* 핀 공감 & 공감 취소 API */
-    public PostLikeRes likeSong(int useridx, int pinidx){
-        return songDao.likeSong(useridx, pinidx);
+    public PostLikeRes likeSong(int userIdx, int pinIdx) throws BaseException {
+        try{
+            return songDao.likeSong(userIdx, pinIdx);
+        } catch(Exception exception){
+            throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
+        }
     }
 
     /* 댓글 작성 API */
