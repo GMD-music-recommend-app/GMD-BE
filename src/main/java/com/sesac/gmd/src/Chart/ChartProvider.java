@@ -22,9 +22,9 @@ public class ChartProvider {
     }
 
     /* 현 위치의 지역구 기준 인기차트 반환 */
-    public List<GetChartRes> getChart(GetChartReq getChartReq) throws BaseException{
+    public List<GetChartRes> getChart(String city) throws BaseException{
         try{
-            return chartDao.getChart(getChartReq);
+            return chartDao.getChart(city);
         }catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
