@@ -2,10 +2,7 @@ package com.sesac.gmd.src.song;
 
 import com.sesac.gmd.config.BaseException;
 import com.sesac.gmd.config.BaseResponseStatus;
-import com.sesac.gmd.src.song.model.PostCommentReq;
-import com.sesac.gmd.src.song.model.PostLikeRes;
-import com.sesac.gmd.src.song.model.PostPinReq;
-import com.sesac.gmd.src.song.model.PostPinRes;
+import com.sesac.gmd.src.song.model.*;
 import com.sesac.gmd.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,8 +41,12 @@ public class SongService {
     }
     
     /* 핀 공감 & 공감 취소 API */
-    public PostLikeRes likeSong(int useridx, int pinidx){
-        return songDao.likeSong(useridx, pinidx);
+    public String likeSong(PostLikeReq postLikeReq) throws BaseException{
+        try{
+            return songDao.likeSong(postLikeReq);
+        }catch(Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     /* 댓글 작성 API */
