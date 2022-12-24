@@ -1,7 +1,7 @@
 package com.sesac.gmd.utils;
 
 import com.sesac.gmd.config.BaseException;
-import com.sesac.gmd.config.Secret.Secret;
+import com.sesac.gmd.config.secret.Secret;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
