@@ -121,7 +121,7 @@ public class SongController {
     })
     @ResponseBody
     @PostMapping("/like/{userIdx}/{pinIdx}")
-    public BaseResponse<PostLikeRes> likeSong(@PathVariable int userIdx, @PathVariable int pinIdx){
+    public BaseResponse<String> likeSong(@PathVariable int userIdx, @PathVariable int pinIdx){
         try{
             int userIdxJwt = jwtService.getUserIdx();
             //useridx로 접근한 유저가 같은 유저인지 확인하기
@@ -129,8 +129,8 @@ public class SongController {
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
             }
             //유저 아이디랑 핀 아이디 넘겨주기
-            PostLikeRes postLikeRes = songService.likeSong(userIdx, pinIdx);
-            return new BaseResponse<>(postLikeRes);
+            String result = songService.likeSong(userIdx, pinIdx);
+            return new BaseResponse<>(result);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }

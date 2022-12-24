@@ -29,10 +29,10 @@ public class ChartController {
     /* 현 위치의 지역구 기준 인기차트 반환 */
     @ApiOperation("지역 내 인기차트 반환")
     @ResponseBody
-    @GetMapping("")
-    public BaseResponse<List<GetChartRes>> getChart(@RequestBody GetChartReq getChartReq){
+    @GetMapping("/{city}")
+    public BaseResponse<List<GetChartRes>> getChart(@PathVariable("city") String city){
         try{
-            List<GetChartRes> getChartRes = chartProvider.getChart(getChartReq);
+            List<GetChartRes> getChartRes = chartProvider.getChart(city);
             return new BaseResponse<>(getChartRes);
 
         }catch(BaseException exception){
